@@ -40,44 +40,19 @@ public class LinuxCommands : MonoBehaviour
 
     private void instcd(string inst)
     {
-        // Remove any newline characters or extra spaces
-        inst = Regex.Replace(inst, "¥n", "").Trim();
+        inst = Regex.Replace(inst, "\n", "").Trim();
 
-        // If the input is empty or contains only spaces, go to the root folder
-        if (string.IsNullOrEmpty(inst))
+        if (string.IsNullOrEmpty(inst) || inst == "~")
         {
-            GameManager.currFolder = FileDirection.root;  // Adjust to root folder
+            // Navigate to root directory if "~" or empty is passed
+            GameManager.currFolder = FileDirection.root;
             GameManager.DefaultInstruction = "<color=#6BF263>User@MyDearestLinux:~$ </color>";
-            return;
         }
-
-        // Split the input by '/' to navigate through folders
-        string[] folders = inst.Split('/');
-
-        // Start from the current folder
-        Folder currentFolder = GameManager.currFolder;
-
-        foreach (string folder in folders)
+        else
         {
-            // Try to find the folder within the current folder
-            Folder nextFolder = currentFolder.subFolders.Find(f => f.name == folder);
-
-            if (nextFolder.name == null)
-            {
-                // If the folder is not found, output an error message and stop
-                GameManager.AddInstruction("***Directory not found***");
-                return;
-            }
-
-            // Move to the next folder in the path
-            currentFolder = nextFolder;
+            // Otherwise, change to the specified directory
+            FileDirection.ChangeDirectory(inst);
         }
-
-        // Update the current folder to the one we navigated to
-        GameManager.currFolder = currentFolder;
-
-        // Update the DefaultInstruction to reflect the new folder path
-        GameManager.DefaultInstruction = $"<color=#6BF263>User@MyDearestLinux:~/{inst}$ </color>";
     }
 
     private void instls(string inst)

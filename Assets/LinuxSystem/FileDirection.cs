@@ -65,6 +65,71 @@ public class FileDirection : MonoBehaviour
         // Output result to GameManager
         GameManager.AddInstruction($"{output.Trim()}");
     }
+    public static void ChangeDirectory(string path)
+    {
+        // Navigate to root if path is empty or '/'
+        if (string.IsNullOrEmpty(path) || path == "/")
+        {
+            GameManager.currFolder = root;
+            GameManager.DefaultInstruction = "<color=#6BF263>User@MyDearestLinux:~$ </color>";
+            return;
+        }
+
+        string[] pathParts = path.Split('/');
+        Folder targetFolder = GameManager.currFolder;
+
+        // Traverse through folder structure
+        foreach (string part in pathParts)
+        {
+            if (string.IsNullOrEmpty(part)) continue;  // Skip empty parts
+
+            Folder nextFolder = targetFolder.subFolders.Find(f => f.name == part);
+
+            if (nextFolder.name == null)  // Folder not found
+            {
+                GameManager.AddInstruction("***Directory not found***");
+                return;
+            }
+
+            targetFolder = nextFolder;
+        }
+
+        // Update current folder and construct the full path for prompt display
+        GameManager.currFolder = targetFolder;
+        string fullPath = GetFullPath(GameManager.currFolder);
+        GameManager.DefaultInstruction = $"<color=#6BF263>User@MyDearestLinux:~/{fullPath}$ </color>";
+    }
+
+    // Helper function to construct the full path of the current folder
+    private static string GetFullPath(Folder folder)
+    {
+        List<string> folderNames = new List<string>();
+
+        // Traverse upwards from the current folder to root to get the full path
+        Folder current = folder;
+        while (current.name != root.name)
+        {
+            folderNames.Insert(0, current.name);
+            current = FindParentFolder(current, root);  // Helper to find parent folder
+        }
+
+        return string.Join("/", folderNames);
+    }
+
+    // Helper to find the parent folder of the current folder, starting from root
+    private static Folder FindParentFolder(Folder folder, Folder current)
+    {
+        foreach (var subFolder in current.subFolders)
+        {
+            if (subFolder.name == folder.name)
+                return current;
+
+            var foundFolder = FindParentFolder(folder, subFolder);
+            if (foundFolder.name != null)
+                return foundFolder;
+        }
+        return new Folder();  // Return an empty folder if not found
+    }
 
     // Helper function to recursively find the folder based on the directory string
     private static Folder FindFolder(Folder currentFolder, string direct)
