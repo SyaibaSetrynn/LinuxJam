@@ -16,12 +16,13 @@ public class DisplayManager : MonoBehaviour
     {
         inputfield.text = GameManager.DefaultInstruction;
         LengthDefault = inputfield.text;
-        inputfield.ActivateInputField();
         inputfield.caretPosition = inputfield.text.Length;
     }
 
     public void EnterCommand()
     {
+        Debug.Log("Enter");
+        inputfield.text += "\n";
         string result="Connect not succeed.\n";
         //Send to GameManager: Give result a value (It should end with a \n)
         result = GameManager.ExeInstruction(CurrentText);
@@ -31,7 +32,7 @@ public class DisplayManager : MonoBehaviour
         LengthDefault = inputfield.text;
         CurrentText = "";
         inputfield.ActivateInputField();
-        inputfield.caretPosition = inputfield.text.Length;
+        //inputfield.caretPosition = inputfield.text.Length;
         //inputfield.selectionAnchorPosition = inputfield.caretPosition;  // Ensure nothing is selected
         //inputfield.selectionFocusPosition = inputfield.caretPosition;   // Ensure nothing is selected
     }
@@ -105,12 +106,12 @@ public class DisplayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        inputfield.interactable = !GameManager.Executing;
+        if (inputfield.interactable==GameManager.Executing)
+            inputfield.interactable = !GameManager.Executing;
         CheckParet();
         FixWords();
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            //inputfield.text += "\n";
             EnterCommand();
         }
     }

@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     public static string ExeInstruction(string instruct)
     {
-
+        Debug.Log("Exe");
         return "Command not found\n";
     }
     // Start is called before the first frame update
