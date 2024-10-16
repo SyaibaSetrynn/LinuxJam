@@ -17,24 +17,31 @@ public class DisplayManager : MonoBehaviour
         inputfield.text = GameManager.DefaultInstruction;
         LengthDefault = inputfield.text;
         inputfield.caretPosition = inputfield.text.Length;
+        inputfield.ActivateInputField();
     }
 
     public void EnterCommand()
     {
         Debug.Log("Enter");
-        inputfield.text += "\n";
-        string result="Connect not succeed.\n";
-        //Send to GameManager: Give result a value (It should end with a \n)
-        result = GameManager.ExeInstruction(CurrentText);
+
+        // Handle the case where there is no input
+        if (CurrentText == "") inputfield.text += "\n";
+
+        GameManager.ExeInstruction(CurrentText);
         GameManager.Executing = true;
-        inputfield.text = inputfield.text+result;
-        inputfield.text += GameManager.DefaultInstruction;
+        // Disable interaction while processing
+        inputfield.interactable = false;
+
+        // Update the internal state
         LengthDefault = inputfield.text;
         CurrentText = "";
-        inputfield.ActivateInputField();
-        //inputfield.caretPosition = inputfield.text.Length;
-        //inputfield.selectionAnchorPosition = inputfield.caretPosition;  // Ensure nothing is selected
-        //inputfield.selectionFocusPosition = inputfield.caretPosition;   // Ensure nothing is selected
+
+        // Make sure the input field stays interactable after processing
+        inputfield.interactable = true;
+
+        // Ensure the input field is focused and caret is moved to the end
+        //StartCoroutine(SetCaretToEnd());
+        SetCaretToEnd();
     }
 
     public void FixWords()
@@ -59,9 +66,9 @@ public class DisplayManager : MonoBehaviour
 
     public void CheckParet()
     {
-        if (inputfield.caretPosition < LengthDefault.Length)
+        if (inputfield.caretPosition < Regex.Replace(LengthDefault, "<.*?>", "").Length)
         {
-            inputfield.caretPosition = LengthDefault.Length;
+            inputfield.caretPosition = Regex.Replace(LengthDefault, "<.*?>", "").Length;
         }
     }
     private void SwallowLine()
@@ -101,14 +108,37 @@ public class DisplayManager : MonoBehaviour
         }
         // Keep the input field active
         inputfield.ActivateInputField();
+        //StartCoroutine(SetCaretToEnd());
+        SetCaretToEnd();
     }
-
+    private void SetCaretToEnd()
+    {
+        //yield return new WaitForEndOfFrame();
+        // Now set the caret position at the end of the text
+        inputfield.ActivateInputField();
+        inputfield.caretPosition = inputfield.text.Length;
+    }
     // Update is called once per frame
     void Update()
     {
-        if (inputfield.interactable==GameManager.Executing)
+        bool flag = true;
+        if (Input.anyKeyDown)
+        {
+            Debug.Log(Regex.Replace(LengthDefault, "<.*?>", "").Length+"<"+inputfield);
+            CheckParet();
+            flag = false;
+        }
+        if (inputfield.interactable == GameManager.Executing)
+        {
             inputfield.interactable = !GameManager.Executing;
-        CheckParet();
+            if (inputfield.interactable)
+            {
+                //StartCoroutine(SetCaretToEnd());
+                SetCaretToEnd() ;
+            }
+        }
+        if (flag)
+            CheckParet();
         FixWords();
         if (Input.GetKeyDown(KeyCode.Return))
         {

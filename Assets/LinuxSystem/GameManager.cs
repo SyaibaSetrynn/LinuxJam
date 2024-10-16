@@ -10,12 +10,13 @@ struct lines
 
 public class GameManager : MonoBehaviour
 {
-    public static string DefaultInstruction = "<color=#6BF263>User@MyDearestLinux:~$_</color>";
+    public static string DefaultInstruction = "<color=#6BF263>User@MyDearestLinux:~$ </color>";
     public static int LineLimit = 32;
     public static bool Executing = false;
     public InputField inputField;
     private static Queue<lines> instructions = new Queue<lines>();
     private float CurrCoolDown=0;
+    public static LinuxCommands LinuxMachine;
 
     public static void AddInstruction(string cont,float Cool=0)
     {
@@ -25,9 +26,10 @@ public class GameManager : MonoBehaviour
         instructions.Enqueue(l);
     }
 
-    public static string ExeInstruction(string instruct)
+    public static string ExeInstruction(string instructi)
     {
-        Debug.Log("Exe");
+        Debug.Log(instructi);
+        LinuxMachine.Execute(instructi);
         return "Command not found\n";
     }
     // Start is called before the first frame update
@@ -44,6 +46,7 @@ public class GameManager : MonoBehaviour
             if (instructions.Count == 0)
             {
                 GameManager.Executing = false;
+                inputField.text += GameManager.DefaultInstruction;
             }
             else
             {
