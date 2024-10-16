@@ -1,7 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Text.RegularExpressions;
 struct lines
 {
     public string Content;
@@ -13,29 +15,34 @@ public class GameManager : MonoBehaviour
     public static string DefaultInstruction = "<color=#6BF263>User@MyDearestLinux:~$ </color>";
     public static int LineLimit = 32;
     public static bool Executing = false;
-    public InputField inputField;
+    public TMP_InputField inputField;
     private static Queue<lines> instructions = new Queue<lines>();
     private float CurrCoolDown=0;
     public static LinuxCommands LinuxMachine;
+    public static Folder currFolder;
+    public DisplayManager displayManager;
 
     public static void AddInstruction(string cont,float Cool=0)
     {
+        Debug.Log("AddInstruction");
         lines l=new lines();
-        l.Content = cont;
+        cont = Regex.Replace(cont, "¥n", "");
+        l.Content = cont+"\n";
         l.Cooldown = Cool;
         instructions.Enqueue(l);
     }
 
-    public static string ExeInstruction(string instructi)
+    public static void ExeInstruction(string instructi)
     {
         Debug.Log(instructi);
         LinuxMachine.Execute(instructi);
-        return "Command not found\n";
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        currFolder = FileDirection.root;
+        LinuxMachine=GetComponent<LinuxCommands>();
+        displayManager = GetComponent<DisplayManager>();
     }
 
     // Update is called once per frame
@@ -45,11 +52,16 @@ public class GameManager : MonoBehaviour
         {
             if (instructions.Count == 0)
             {
+                if (GameManager.Executing)
+                {
+                    inputField.text += GameManager.DefaultInstruction;
+                    displayManager.MaintainLength();
+                }
                 GameManager.Executing = false;
-                inputField.text += GameManager.DefaultInstruction;
             }
             else
             {
+                //Debug.Log("instructions.count Not 0");
                 lines tmp = instructions.Dequeue();
                 CurrCoolDown = tmp.Cooldown;
                 inputField.text += tmp.Content;

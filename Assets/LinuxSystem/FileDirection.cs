@@ -2,37 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+public struct File
+{
+    public string name;
+    public string content;
+    public File(string name, string content)
+    {
+        this.name = name;
+        this.content = content;       // Initialize the list of files
+    }
+}
 public struct Folder
 {
     public string name;                    // Name of the folder
     public List<Folder> subFolders;        // A list of subfolders within this folder
-    public List<string> files;             // A list of files within this folder
+    public List<File> files;             // A list of files within this folder
     // Constructor to initialize folder with its name
     public Folder(string name)
     {
         this.name = name;
         this.subFolders = new List<Folder>();   // Initialize the list of subfolders
-        this.files = new List<string>();        // Initialize the list of files
+        this.files = new List<File>();        // Initialize the list of files
     }
     // Method to add a subfolder to this folder
     public void AddSubFolder(Folder subFolder)
     {
         subFolders.Add(subFolder);
     }
-    // Method to add a file to this folder
-    public void AddFile(string fileName)
+    public void AddFile(string name, string content)
     {
-        files.Add(fileName);
+        files.Add(new File(name, content));
     }
+
 }
 
 public class FileDirection : MonoBehaviour
 {
     public static Folder root=new Folder("");
     // Start is called before the first frame update
-    public static void list(Folder rootFolder, string direct)
+    public static void list(Folder currentFolder)
     {
-        Folder currentFolder = FindFolder(rootFolder, direct);
 
         if (currentFolder.name == null)
         {
@@ -45,16 +54,16 @@ public class FileDirection : MonoBehaviour
 
         foreach (var folder in currentFolder.subFolders)
         {
-            output += folder.name + "/  ";  // Show subfolders (with a trailing slash)
+            output += "["+folder.name + "]  ";  // Show subfolders (with a trailing slash)
         }
 
         foreach (var file in currentFolder.files)
         {
-            output += file + "  ";  // Show files
+            output += file.name + "  ";  // Show files
         }
 
         // Output result to GameManager
-        GameManager.AddInstruction($"***{output.Trim()}***");
+        GameManager.AddInstruction($"{output.Trim()}");
     }
 
     // Helper function to recursively find the folder based on the directory string
@@ -81,7 +90,10 @@ public class FileDirection : MonoBehaviour
     }
     void Start()
     {
-
+        root.AddFile("Instruction.txt", "This is the instruction");
+        //Construct Folders
+        root.AddSubFolder(new Folder("LastProject"));
+        root.subFolders[0].AddSubFolder(new Folder("Handout"));
     }
 
     // Update is called once per frame

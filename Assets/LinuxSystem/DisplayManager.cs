@@ -118,13 +118,18 @@ public class DisplayManager : MonoBehaviour
         inputfield.ActivateInputField();
         inputfield.caretPosition = inputfield.text.Length;
     }
+
+    public void MaintainLength()
+    {
+        LengthDefault = inputfield.text;
+    }
     // Update is called once per frame
     void Update()
     {
         bool flag = true;
         if (Input.anyKeyDown)
         {
-            Debug.Log(Regex.Replace(LengthDefault, "<.*?>", "").Length+"<"+inputfield);
+            Debug.Log(LengthDefault.Length+">"+inputfield.text.Length);
             CheckParet();
             flag = false;
         }
@@ -133,6 +138,7 @@ public class DisplayManager : MonoBehaviour
             inputfield.interactable = !GameManager.Executing;
             if (inputfield.interactable)
             {
+                LengthDefault = inputfield.text;
                 //StartCoroutine(SetCaretToEnd());
                 SetCaretToEnd() ;
             }
