@@ -129,7 +129,7 @@ public class DisplayManager : MonoBehaviour
         bool flag = true;
         if (Input.anyKeyDown)
         {
-            Debug.Log(LengthDefault.Length+">"+inputfield.text.Length);
+            //Debug.Log(LengthDefault.Length+">"+inputfield.text.Length);
             CheckParet();
             flag = false;
         }

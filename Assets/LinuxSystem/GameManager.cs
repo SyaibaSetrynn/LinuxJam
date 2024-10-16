@@ -4,10 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Text.RegularExpressions;
+using System;
 struct lines
 {
     public string Content;
     public float Cooldown;
+    public bool inProgram;
 }
 
 public class GameManager : MonoBehaviour
@@ -21,15 +23,41 @@ public class GameManager : MonoBehaviour
     public static LinuxCommands LinuxMachine;
     public static Folder currFolder;
     public DisplayManager displayManager;
-
-    public static void AddInstruction(string cont,float Cool=0)
+    public static bool inprogram;
+    public static bool[] GameEvent = new bool[100];
+    /*Listing all events down here:
+     *0: Wrong input of name
+     */
+    public static string TidyString(string inp)
     {
-        Debug.Log("AddInstruction");
-        lines l=new lines();
-        cont = Regex.Replace(cont, "¥n", "");
-        l.Content = cont+"\n";
-        l.Cooldown = Cool;
-        instructions.Enqueue(l);
+        return inp.Trim().Replace("\n", "").Replace("\r", "");
+    }
+    public static void AddInstruction(string cont,float Cool=0,bool inProgram=false)
+    {
+        if (Cool==114.5f)
+        {
+            Debug.Log("Application Quit");
+            Application.Quit(0);
+        }
+        if (inProgram)
+        {
+            lines l = new lines();
+            cont = Regex.Replace(cont, "¥n", "");
+            l.Content = cont;
+            l.Cooldown = Cool;
+            l.inProgram = true;
+            inprogram = true;
+            //Debug.Log(l.Content);
+            instructions.Enqueue(l);
+        }
+        else
+        {
+            lines l = new lines();
+            cont = Regex.Replace(cont, "¥n", "");
+            l.Content = cont + "\n";
+            l.Cooldown = Cool;
+            instructions.Enqueue(l);
+        }
     }
 
     public static void ExeInstruction(string instructi)
@@ -54,17 +82,27 @@ public class GameManager : MonoBehaviour
             {
                 if (GameManager.Executing)
                 {
-                    inputField.text += GameManager.DefaultInstruction;
-                    displayManager.MaintainLength();
+                    if (!inprogram)
+                    {
+                        inputField.text += GameManager.DefaultInstruction;
+                        displayManager.MaintainLength();
+                        Debug.Log("Outside program");
+                    }
+                    else
+                    {
+                        displayManager.MaintainLength();
+                        Debug.Log("Inside program");
+                    }
                 }
                 GameManager.Executing = false;
             }
             else
             {
-                //Debug.Log("instructions.count Not 0");
                 lines tmp = instructions.Dequeue();
+                Debug.Log(tmp.Content+" "+tmp.inProgram);
                 CurrCoolDown = tmp.Cooldown;
                 inputField.text += tmp.Content;
+                inprogram = tmp.inProgram;
             }
         }
         else
