@@ -54,7 +54,7 @@ public class FileDirection : MonoBehaviour
 
         foreach (var folder in currentFolder.subFolders)
         {
-            output += "["+folder.name + "]  ";  // Show subfolders (with a trailing slash)
+            output += "<b><color=#569CD6>" + folder.name + "</color></b> ";  // Show subfolders (with a trailing slash)
         }
 
         foreach (var file in currentFolder.files)
@@ -156,9 +156,14 @@ public class FileDirection : MonoBehaviour
     void Start()
     {
         root.AddFile("Instruction.txt", "This is the instruction");
+        StateMachine.instruction=root.files[0];
         //Construct Folders
-        root.AddSubFolder(new Folder("LastProject"));
-        root.subFolders[0].AddSubFolder(new Folder("Handout"));
+        root.AddSubFolder(new Folder("P214.Integration"));
+        root.subFolders[0].AddFile("submission.java",
+                                                    "*****Premission Error*****\n" +
+                                                    "You don't have permission to open this file.\n" +
+                                                    "Error detail: Time period exceeded\n" +
+                                                    "***************************\n");
     }
 
     // Update is called once per frame

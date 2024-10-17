@@ -24,9 +24,16 @@ public class GameManager : MonoBehaviour
     public static Folder currFolder;
     public DisplayManager displayManager;
     public static bool inprogram;
-    public static bool[] GameEvent = new bool[100];
+    public static bool[] GameEvent = new bool[10];
     /*Listing all events down here:
      *0: Wrong input of name
+     */
+    public static bool[] LockInstruction = new bool[4];
+    /* Listing all lockable instruction here:
+     * echo: unlock at chap1 using #0
+     * rm/cp/me: unlock at chap2 using #1
+     * make: unlock at chap3 using #2
+     * Samantha: unlock at chap6 using #3
      */
     public static string TidyString(string inp)
     {
