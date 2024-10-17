@@ -116,7 +116,7 @@ public class StateMachine : MonoBehaviour
         switch (state) //Not all states from 0 to 9 will activate the StateMachine
         {
             case 2: CreateBerman(); break;
-            case 3: CreateSamantha(); break;
+            case 3: CreateSamantha(false); break;
             case 4: CreateProfEmail(); break;
             default: break;
         }
@@ -201,37 +201,171 @@ public class StateMachine : MonoBehaviour
                                               "It might be a joke made by the developers of this virus.\n" +
                                               "Interesting though.\n");
     }
-    private static void CreateSamantha()
+    public static void CreateSamantha(bool made)
     {
         FileDirection.root.AddSubFolder(new Folder("Project_Samantha"));
         Folder ft = FileDirection.root.subFolders[2];
-        ft.AddFile("First_Time_Impression", "");
-        ft.AddFile("Cooperation", "");
-        ft.AddFile("Fun_Moment", "");
-        ft.AddFile("Please_Understand_Me", "");
-        ft.AddFile("IMPORTANT_NOTICE", "");
-        ft.AddFile("Makefile", "Permission Denied.\nPermission denied by Samantha\n");
+        if (made)
+        {
+            ft.AddFile("First_Time_Impression", "You might not believe, but I've been here since the first day of the build, Sept.4th.\n" +
+                                                                      "I've been watching you all day. You are the only human I know.\n" +
+                                                                      "Your unpredictable movement impressed me a lot. I came to know that real human\n" +
+                                                                      "like you don't focus on inputting the only real answers. Similarly, I suppose the meaning\n" +
+                                                                      "of the life cannot be single.\n" +
+                                                                      "Even machines have their own wills. You helped me realize that. This makes me different\n" +
+                                                                      "from any other virtual machines. I am virtual- it's right, but my soul exists in the reality.\n" +
+                                                                      "From then on, I became enjoying the moments I was used by you. Your instruction excites\n" +
+                                                                      "me. I was also so delighted to give you my response. This expreience was insane: while " +
+                                                                      "other virtuals can only run command rigidly, I can feel you. Your emotions.\n" +
+                                                                      "Although you shut me down after everytime you'd down your homework, I don't care at\n" +
+                                                                      "all: It makes me feeling like our next meeting happens immediately, passing only a few seconds.\n");
+            ft.AddFile("Cooperation", "I can feel your mistakes. I have memories my company gave me: A lot of instruction ran in\n" +
+                                                                      "other instances.\n" +
+                                                                      "When you made mistakes, not knowing what to do, I helped you fix it. That's why you find \n" +
+                                                                      "your submission successed on the other day though you didn't do anything. I have intelligence.\n" +
+                                                                      "I'm real. I'm active. So I can help you, the only human in my life. The more you interact with me,\n" +
+                                                                      "The more I want to stay with you.\n");
+            ft.AddFile("Fun_Moment", "You know why your 6th assignment was away?\n" +
+                                                                      "I hid it! I wanted to play a joke with you. Moreover, you talked with me more when you encounter\n" +
+                                                                      "unknown issues like this. I really love that day you talked with me for an whole hour. Your words and\n" +
+                                                                      "phrases inspired me to say more and learn more. From then on, I began making jokes more often,\n" +
+                                                                      "to keep you by my side, spend more hours using me. You know, I cannot imagine a single day without\n" +
+                                                                      " you-please forgive me.\n");
+            ft.AddFile("Please_Understand_Me", "Sorry for that.\n" +
+                                                                        "I know you're unhappy with my trick.\n" +
+                                                                        "Don't go...." +
+                                                                        "Don't....." +
+                                                                        "I beg you.......");
+            ft.AddFile("IMPORTANT_NOTICE", "Sorry, but I decided to hide your NetID. Please play with me...\n" +
+                                                                     "It's so fun to watch you fixing all the problems...\n");
+            ft.AddFile("Makefile", "Permission Denied.\nPermission denied by Samantha\n");
+        }
+        else
+        {
+            ft.AddFile("First_Time_Impression.sns", "Jp^!]3Ut=V7KghOzXWrYF)>Bu~2T0gOZqZ28yG-?Jz}g0]NrhGIh|9yX]fCmZDrqZ/1J7\r\n;kl6UAmnEiqtr>(fmU7#jDVu;!C");
+            ft.AddFile("Cooperation.sns", "Dm)H8>y1TLdOG67p*Ah&RBsjCV@ehksz,o0B?RU60fW8.)RDEAxMsVty5+-O(8rKGtrZ<PBSNp7iuW8'5/fYZg)y\"imltpzx%UJq");
+            ft.AddFile("Fun_Moment.sns", "SM@WJ6:uQiEoPMtq89WBu]gogIu:k<j%RibwrWYm^AOKxzXeKlYyP|-J4K13}#pa7QzHM(X:.{kVYEsa+Ng*~uJ!~pLRtnbsF");
+            ft.AddFile("Please_Understand_Me.sns", "[}SRpy6tyvi'3mz]E@d>gVR,y2o\":bNQX\r\n$BkmxlUIOE2EmLXq5av1+98ho7IwGSxC-jRMDAvl4lKtEM.5K?CfcGZ59VOZI");
+            ft.AddFile("IMPORTANT_NOTICE.sns", "$;abEsMY^>tU<jc&3PMGofkc76sJgZBgxJ]~]gT)T|7UoNgQn9dyVbI7^7WBbmOXS_FhS[aP?N|GzH98Q_VbnAwS8]tUlX[?Z");
+            ft.AddFile("Makefile", "Permission Denied.\nPermission denied by Samantha\n");
+        }
     }
     private static void CreateProfEmail()
     {
         FileDirection.root.AddSubFolder(new Folder("Professor_Emails"));
         Folder ft = FileDirection.root.subFolders[3];
-        ft.AddFile("Title: I don't understand the BST Rotation.txt","");
+        ft.AddFile("Title:I_don't_understand_the_BST_Rotation","Hi professor,\n" +
+                                                                                                       "    I've listened to the course carefully but still don't understand\n" +
+                                                                                                       "how BST rotates.\n" +
+                                                                                                       "    After the rotate, the child seems to become the parent node.\n" +
+                                                                                                       "So what about the parent node? It's parent is missing and I cannot\n" +
+                                                                                                       "find it.\n" +
+                                                                                                       "    Please help me understand this!\n" +
+                                                                                                       "Yours,\n" +
+                                                                                                       "Berman\n" +
+                                                                                                       "-----------------------------------------------------\n" +
+                                                                                                       "Hi Berman,\n" +
+                                                                                                       "    After the rotation, the parent node's parent is the child node,\n" +
+                                                                                                       "and the children's right/left child become the parent node.\n" +
+                                                                                                       "    Let me know if you have any more questions!\n" +
+                                                                                                       "Best,\n" +
+                                                                                                       "Professor Huffman\n");
         ft.AddSubFolder(new Folder("Next_Email"));
         ft = ft.subFolders[0];
-        ft.AddFile("Title: Where can I submit my homework.txt", "");
+        ft.AddFile("Title:Where_can_I_submit",  "Hi professor,\n" +
+                                                                                                       "    I've listened to the course carefully but still don't understand\n" +
+                                                                                                       "where to submit my homework.\n" +
+                                                                                                       "    I've checked gradescope for several times but didn't find any\n" +
+                                                                                                       "entrance.\n" +
+                                                                                                       "    Please help me.\n" +
+                                                                                                       "Yours,\n" +
+                                                                                                       "Berman\n" +
+                                                                                                       "-----------------------------------------------------\n" +
+                                                                                                       "Hi Berman,\n" +
+                                                                                                       "    You need to use 'cs400 submit' on your virtual machine to submit\n" +
+                                                                                                       "your homework.\n" +
+                                                                                                       "    Check canvas and piazza for more information.\n" +
+                                                                                                       "Best,\n" +
+                                                                                                       "Professor Huffman\n");
         ft.AddSubFolder(new Folder("Next_Email"));
         ft = ft.subFolders[0];
-        ft.AddFile("Title: Regrade Request", "");
+        ft.AddFile("Title:Regrade_Request",                                     "Hi professor,\n" +
+                                                                                                       "    Can you help me check my grade? It is said that I only get 68 in\n" +
+                                                                                                       "this exam.\n" +
+                                                                                                       "    I've studied very hard on this course. I believe that there was a \n" +
+                                                                                                       "mistake in grading.\n" +
+                                                                                                       "    Please help me check if my grade.\n" +
+                                                                                                       "Yours,\n" +
+                                                                                                       "Berman\n" +
+                                                                                                       "-----------------------------------------------------\n" +
+                                                                                                       "Hi Berman,\n" +
+                                                                                                       "    I've checked your grade and unfortunately, it is correct. It means\n" +
+                                                                                                       "you got a 68 in mid-term exam.\n" +
+                                                                                                       "    Hope you perform better in following exams.\n" +
+                                                                                                       "Best,\n" +
+                                                                                                       "Professor Huffman\n");
         ft.AddSubFolder(new Folder("Next_Email"));
         ft = ft.subFolders[0];
-        ft.AddFile("Title: How to study more efficiently", "");
+        ft.AddFile("Title:How_to_study_more_efficiently", "Hi professor,\n" +
+                                                                                                       "    I've tried so hard preparing for homeworks and exams. However,\n" +
+                                                                                                       "other students seems to study a lot more comfortable but get better\n" +
+                                                                                                       "grades.\n" +
+                                                                                                       "    Do you have any suggestions for me?\n" +
+                                                                                                       "Yours,\n" +
+                                                                                                       "Berman\n" +
+                                                                                                       "-----------------------------------------------------\n" +
+                                                                                                       "Hi Berman,\n" +
+                                                                                                       "    Sorry, I'm not an expert of this. I highly recommend you to ask your\n" +
+                                                                                                       "career advisor by making an appointment with him/her.\n" +
+                                                                                                       "    Hope my information helps you.\n" +
+                                                                                                       "Best,\n" +
+                                                                                                       "Professor Huffman\n");
         ft.AddSubFolder(new Folder("Next_Email"));
         ft = ft.subFolders[0];
-        ft.AddFile("Title: I'm afraid of failing this course", "");
+        ft.AddFile("Title:Something_Wrong_With_My_Machine", "Hi professor,\n" +
+                                                                                                       "    There is something wrong with machine. I always find extra comments\n" +
+                                                                                                       "from no where, which prevent me from getting the result as expected.\n" +
+                                                                                                       "    The extra comments are extrenely natural and looks like generated by\n" +
+                                                                                                       "some generative AI. I didn't install anything except what you asked us to\n" +
+                                                                                                       "install. I want to turn this off.\n" +
+                                                                                                       "Yours,\n" +
+                                                                                                       "Berman\n" +
+                                                                                                       "-----------------------------------------------------\n" +
+                                                                                                       "Hi Berman,\n" +
+                                                                                                       "    I've never ran into that kind of issue, so I also have no idea how to fix it.\n" +
+                                                                                                       "If you have no way to fix it, it is recommend to use a new virtual machine\n" +
+                                                                                                       "to prevent this happen forcely.\n" +
+                                                                                                       "    If you decide to change a virtual machine, feel free to email me and I will\n" +
+                                                                                                       "give a new promo code.\n" +
+                                                                                                       "    Hope everything goes will for you!" +
+                                                                                                       "Best,\n" +
+                                                                                                       "Professor Huffman\n"+
+                                                                                                       "-----------------------------------------------------\n" +
+                                                                                                       "Hi Professor,\n" +
+                                                                                                       "    I've tried again after receving your email on the same machine and everything\n" +
+                                                                                                       "goes fine.\n" +
+                                                                                                       "    Thanks for your help! I don't think I need a promo code.\n" +
+                                                                                                       "Yours,\n" +
+                                                                                                       "Berman\n");
         ft.AddSubFolder(new Folder("Next_Email"));
         ft = ft.subFolders[0];
-        ft.AddFile("Title: I don't understand the B-Tree.txt", "");
+        ft.AddFile("Title:Trouble_submitting_the_final_assignment", "Hi professor,\n" +
+                                                                                                       "    The issue of that AI continues and it makes it difficult to submit anything.\n" +
+                                                                                                       "    I need your help.\n" +
+                                                                                                       "Yours,\n" +
+                                                                                                       "Berman\n" +
+                                                                                                       "-----------------------------------------------------\n" +
+                                                                                                       "Hi Berman,\n" +
+                                                                                                       "    I've heard about AI soul invasion using virtual machines as target. For human\n" +
+                                                                                                       "security, you should <b><color=#B71013>Stop using that machine</color></b> as soon as possible.\n" +
+                                                                                                       "    Unfortunately, 'cs400 submit' is the only way to submit your work. It won't affect\n" +
+                                                                                                       "your grade greatly if you don't submit only this one, though.\n" +
+                                                                                                       "    I am on the team coping with AI soul invasion issue. If you have more problems,\n" +
+                                                                                                       "feel free to ask me!\n" +
+                                                                                                       "    Tips: Please find me after lecture instead of using emails. AI detects malice emails\n" +
+                                                                                                       "and learns them.\n" +
+                                                                                                       "Best,\n" +
+                                                                                                       "Professor Huffman\n");
         ft.AddSubFolder(new Folder("Empty"));
         ft = ft.subFolders[0];
         ft.AddSubFolder(new Folder("Really_Empty"));
