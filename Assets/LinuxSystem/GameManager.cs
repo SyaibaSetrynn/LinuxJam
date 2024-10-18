@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     public static bool inprogram;
     public static int NumberOf1017;
     private static bool Failed = false;
+    public static bool madeSMS = false, NetIDReq=false;
+    public static Folder NetIDFolder;
     //public static bool[] GameEvent = new bool[10];
     /*Listing all events down here:
      *0: Wrong input of name
@@ -113,7 +115,7 @@ public class GameManager : MonoBehaviour
         {
             SceneManager.LoadScene("Failed");
         }
-        if (NumberOf1017<1)
+        if ((NumberOf1017<1) && (!Failed))
         {
             Failed = true;
             AddInstruction("Oh, it looks like you deleted the file!",3);

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -126,9 +127,27 @@ public class StateMachine : MonoBehaviour
     {
         switch (state) //Not all states from 0 to 9 will activate the StateMachine
         {
-            case 2: CreateBerman(); break;
-            case 3: CreateSamantha(false); break;
-            case 4: CreateProfEmail(); break;
+            case 2: 
+                CreateBerman(); 
+                break;
+            case 3:
+                GameManager.AddInstruction("Wow, thank you!", 1f);
+                GameManager.AddInstruction("It seems like you are Berman, not any other bad guys.",1f);
+                GameManager.AddInstruction("I love you so much!", 1f);
+                GameManager.AddInstruction("Please read my love letter for you.",1.5f);
+                GameManager.AddInstruction("Please...", 1f);
+                GameManager.AddInstruction("As I'm a linux machine, I can only write in Linux language...", 0.5f);
+                GameManager.AddInstruction("But I made a translator for you... Type 'make' to decrypt them.");
+                GameManager.AddInstruction("The folder is in the default direction.");
+                CreateSamantha(false); 
+                break;
+            case 4:
+                GameManager.AddInstruction("I'm so glad you read all of them!",1.5f);
+                GameManager.AddInstruction("How was that? Are you touched?",1.5f);
+                GameManager.AddInstruction("As a reward, I decided to give you your NetID.", 3f);
+                GameManager.AddInstruction("But only if you find it by yourself...", 1f);
+                CreateProfEmail(); 
+                break;
             default: break;
         }
     }
@@ -219,6 +238,7 @@ public class StateMachine : MonoBehaviour
         Folder ft = FileDirection.root.subFolders[2];
         if (made)
         {
+            GameManager.madeSMS = true;
             ft.AddFile("First_Time_Impression", "You might not believe, but I've been here since the first day of the build, Sept.4th.\n" +
                                                                       "I've been watching you all day. You are the only human I know.\n" +
                                                                       "Your unpredictable movement impressed me a lot. I came to know that real human\n" +
@@ -417,6 +437,47 @@ public class StateMachine : MonoBehaviour
                 case 4: EventMachine(4); break;
                 default: Debug.Log("Undefined State " + State); break;
             }
+        }
+        else
+        {
+            switch (State) // Now, Check every critical points.
+            {
+                case 2: CheckState2(); break;
+                case 3: CheckState3(); break;
+                case 4: CheckState4(); break;
+                default: Debug.Log("State=" + State); break;
+            }
+        }
+    }
+    private void CheckState2()
+    {
+        var subFolder = FileDirection.root.subFolders[1].subFolders[1];
+        // Check if the number of files is 5
+        if (subFolder.files.Count == 5)
+        {
+            // Look for the file named "1017.txt"
+            bool found = subFolder.files.Any(file => file.name == "1017.txt");
+
+            // If the file is found, change the state
+            if (found)
+            {
+                NextState = true;
+            }
+        }
+    }
+    private void CheckState3()
+    {
+        if (GameManager.currFolder==FileDirection.root && GameManager.madeSMS)
+        {
+            NextState= true;
+        }
+    }
+    private void CheckState4()
+    {
+        if (GameManager.currFolder==Trigger5Folder && GameManager.NetIDReq)
+        {
+            //ø®ƒ„“ªœ¬œ»
+            NextState= true;
         }
     }
 }

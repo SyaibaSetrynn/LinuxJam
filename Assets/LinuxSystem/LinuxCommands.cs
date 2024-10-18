@@ -76,6 +76,9 @@ public class LinuxCommands : MonoBehaviour
                     //Yet to be design.
                     cs400submit(inst,step);
                     break;
+                case "NetIDReq":
+                    //Later
+                    break;
                 default: 
                     Debug.Log("You cannot reach here because running is invalid.");
                     GameManager.inprogram = false;
@@ -147,7 +150,18 @@ public class LinuxCommands : MonoBehaviour
         {
             // Check if the file exists in the current folder
             Folder currentFolder = GameManager.currFolder;  // Assuming you have the current folder reference
-
+            if (GameManager.TidyString(inst)=="YourNetID" && StateMachine.State==4 && GameManager.currFolder==StateMachine.Trigger5Folder)
+            {
+                GameManager.NetIDReq = true;
+                running = "NetIDReq";
+                GameManager.AddInstruction("Oh, why is it not found?", 2f);
+                GameManager.AddInstruction("Haha, I got it!", 1f);
+                GameManager.AddInstruction("You cannot type red bold word right?", 2f);
+                GameManager.AddInstruction("Umm, this is your problem then.....", 2f);
+                GameManager.AddInstruction("Do you really want this NetID?", 1f);
+                GameManager.AddInstruction("Well, if you do, I offer you a chance to ask for it.", 2f);
+                GameManager.AddInstruction("Do you want your NetID? [Y/N]", 0, true);
+            }
             // Try to find the file in the current folder
             File? foundFile = currentFolder.files.Find(f => f.name == inst);
 
@@ -230,7 +244,7 @@ public class LinuxCommands : MonoBehaviour
             return;
         }
 
-        string sourcePath = args[0];
+        string sourcePath = GameManager.TidyString(args[0]);
         string destinationPath = args[1];
 
         // Find the source file
@@ -277,7 +291,7 @@ public class LinuxCommands : MonoBehaviour
             return;
         }
 
-        string targetPath = args[0];
+        string targetPath = GameManager.TidyString(args[0]);
 
         // Remove the file
         if (!RemoveFileByPath(targetPath, FileDirection.root))
@@ -299,8 +313,22 @@ public class LinuxCommands : MonoBehaviour
             GameManager.AddInstruction("The instruction is locked currently. Try again later.");
             return;
         }
-        //Implement this method
-        
+        if (GameManager.currFolder == FileDirection.root.subFolders[2])
+        {
+            if (!GameManager.madeSMS)
+            {
+                StateMachine.CreateSamantha(true);
+                GameManager.AddInstruction("Make process successful.");
+            }
+            else
+            {
+                GameManager.AddInstruction("No action needed: Target already decrypted");
+            }
+        }
+        else
+        {
+            GameManager.AddInstruction("Cannot find Makefile");
+        }
     }
 
     private void instcs400(string inst)
