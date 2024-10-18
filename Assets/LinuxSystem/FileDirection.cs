@@ -12,28 +12,35 @@ public struct File
         this.content = content;       // Initialize the list of files
     }
 }
-public struct Folder
+public class Folder
 {
-    public string name;                    // Name of the folder
-    public List<Folder> subFolders;        // A list of subfolders within this folder
-    public List<File> files;             // A list of files within this folder
-    // Constructor to initialize folder with its name
+    public string name;
+    public List<Folder> subFolders;
+    public List<File> files;
+
+    public Folder()
+    {
+        this.name = "";
+        this.subFolders = new List<Folder>();
+        this.files = new List<File>();
+    }
+
     public Folder(string name)
     {
         this.name = name;
-        this.subFolders = new List<Folder>();   // Initialize the list of subfolders
-        this.files = new List<File>();        // Initialize the list of files
+        this.subFolders = new List<Folder>();
+        this.files = new List<File>();
     }
-    // Method to add a subfolder to this folder
+
     public void AddSubFolder(Folder subFolder)
     {
         subFolders.Add(subFolder);
     }
+
     public void AddFile(string name, string content)
     {
         files.Add(new File(name, content));
     }
-
 }
 
 public class FileDirection : MonoBehaviour
@@ -42,6 +49,11 @@ public class FileDirection : MonoBehaviour
     // Start is called before the first frame update
     public static void list(Folder currentFolder)
     {
+        if (currentFolder == null)
+        {
+            GameManager.AddInstruction("***Directory not found***");
+            return;
+        }
 
         if (currentFolder.name == null)
         {
@@ -84,6 +96,11 @@ public class FileDirection : MonoBehaviour
             if (string.IsNullOrEmpty(part)) continue;  // Skip empty parts
 
             Folder nextFolder = targetFolder.subFolders.Find(f => f.name == part);
+            if (nextFolder==null)
+            {
+                GameManager.AddInstruction("***Directory not found***");
+                return;
+            }
 
             if (nextFolder.name == null)  // Folder not found
             {
@@ -125,7 +142,7 @@ public class FileDirection : MonoBehaviour
                 return current;
 
             var foundFolder = FindParentFolder(folder, subFolder);
-            if (foundFolder.name != null)
+            if (foundFolder != null)
                 return foundFolder;
         }
         return new Folder();  // Return an empty folder if not found
@@ -164,7 +181,6 @@ public class FileDirection : MonoBehaviour
                                                     "You don't have permission to open this file.\n" +
                                                     "Error detail: Time period exceeded\n" +
                                                     "***************************\n");
-        root.AddSubFolder(new Folder("test"));
     }
 
     // Update is called once per frame

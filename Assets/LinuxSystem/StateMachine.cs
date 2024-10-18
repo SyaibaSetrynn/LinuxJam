@@ -148,6 +148,7 @@ public class StateMachine : MonoBehaviour
                                                                     "relief.\n" +
                                                                     "She's better than anyone else on the world.\n");
         Folder tf = FileDirection.root.subFolders[1];
+        Debug.Log("tf" + tf.name);
         tf.AddSubFolder(new Folder("September"));
         tf.AddSubFolder(new Folder("October"));
         tf.AddSubFolder(new Folder("November"));
