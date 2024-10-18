@@ -153,10 +153,10 @@ public class FileDirection : MonoBehaviour
 
         return new Folder(); // Return an empty folder if not found
     }
-    void Start()
+    void Awake()
     {
         root.AddFile("Instruction.txt", "This is the instruction");
-        StateMachine.instruction=root.files[0];
+        Debug.Log(root.files[0].name);
         //Construct Folders
         root.AddSubFolder(new Folder("P214.Integration"));
         root.subFolders[0].AddFile("submission.java",
@@ -164,6 +164,7 @@ public class FileDirection : MonoBehaviour
                                                     "You don't have permission to open this file.\n" +
                                                     "Error detail: Time period exceeded\n" +
                                                     "***************************\n");
+        root.AddSubFolder(new Folder("test"));
     }
 
     // Update is called once per frame

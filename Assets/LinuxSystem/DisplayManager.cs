@@ -14,15 +14,14 @@ public class DisplayManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inputfield.text = GameManager.DefaultInstruction;
+        inputfield.text = "";
         LengthDefault = inputfield.text;
         inputfield.caretPosition = inputfield.text.Length;
-        inputfield.ActivateInputField();
     }
 
     public void EnterCommand()
     {
-        Debug.Log("Enter");
+        //Debug.Log("Enter");
 
         // Handle the case where there is no input
         if (CurrentText == "") inputfield.text += "\n";
@@ -70,6 +69,7 @@ public class DisplayManager : MonoBehaviour
         {
             inputfield.caretPosition = Regex.Replace(LengthDefault, "<.*?>", "").Length;
         }
+        //Debug.Log(LengthDefault.Substring(LengthDefault.Length-10)+Regex.Replace(LengthDefault, "<.*?>", "").Length + "<=" + inputfield.caretPosition);
     }
     private void SwallowLine()
     {
@@ -117,11 +117,17 @@ public class DisplayManager : MonoBehaviour
         // Now set the caret position at the end of the text
         inputfield.ActivateInputField();
         inputfield.caretPosition = inputfield.text.Length;
+        //Debug.Log(LengthDefault.Length + "<=" + inputfield.caretPosition);
     }
 
     public void MaintainLength()
     {
         LengthDefault = inputfield.text;
+    }
+
+    public void Debuglog()
+    {
+        //Debug.Log(LengthDefault.Substring(LengthDefault.Length - 10) + Regex.Replace(LengthDefault, "<.*?>", "").Length + "<=" + inputfield.caretPosition);
     }
     // Update is called once per frame
     void Update()
@@ -143,8 +149,7 @@ public class DisplayManager : MonoBehaviour
                 SetCaretToEnd() ;
             }
         }
-        if (flag)
-            CheckParet();
+        CheckParet();
         FixWords();
         if (Input.GetKeyDown(KeyCode.Return))
         {

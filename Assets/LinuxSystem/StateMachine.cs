@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour
 {
-    public static File instruction;
     public static Folder Trigger5Folder;
+    public static int State;
+    public static bool NextState;
     public static void UpdateInstruction(int state)
     {
+        //Debug.Log("Instruction Updated");
         switch (state)
         {
             case 0:
-                instruction = new File("instruction.txt", "Welcome to the game!\n\n" +
+                FileDirection.root.files[0] = new File("instruction.txt", "Welcome to the game!\n\n" +
                                                                                         "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Submit cs400 work\n\n\n" +
@@ -21,8 +24,8 @@ public class StateMachine : MonoBehaviour
                                                                                         "Use cd alone to return root direction\n\n" +
                                                                                         "ls: List all the files & folders in this directory.\n" +
                                                                                         "Those strings with a blue color represents a folder.\n"); break;
-            case 1:
-                instruction = new File("instruction.txt", "Welcome to the game!\n\n" +
+            case 2:
+                FileDirection.root.files[0] = new File("instruction.txt", "Welcome to the game!\n\n" +
                                                                                         "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Find your own name\n\n\n" +
@@ -32,8 +35,8 @@ public class StateMachine : MonoBehaviour
                                                                                         "ls: List all the files & folders in this directory.\n" +
                                                                                         "Those strings with a blue color represents a folder.\n\n" +
                                                                                         "echo: Show the context in files.\n"); break;
-            case 2:
-                instruction = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
+            case 3:
+                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Move '1017.txt' to the correct place\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
@@ -42,12 +45,14 @@ public class StateMachine : MonoBehaviour
                                                                                         "ls: List all the files & folders in this directory.\n" +
                                                                                         "Those strings with a blue color represents a folder.\n\n" +
                                                                                         "echo: Show the context in files.\n" +
-                                                                                        "rm {$PATH}<file_name>: delete a file in the direction\n" +
-                                                                                        "mv {$PATH}<file_name> {$PATH}<file_name>: move a file to the given place\n" +
-                                                                                        "cp {$PATH}<file_name> {$PATH}<file_name>: copy a file to the given place\n" +
+                                                                                        "rm {$PATH}(file_name): delete a file in the direction\n" +
+                                                                                        "mv {$PATH}(file_name) {$PATH}(file_name): move a file to the given place\n" +
+                                                                                        "cp {$PATH}(file_name) {$PATH}(file_name): copy a file to the given place\n" +
+                                                                                        "<color=#CE9128>You still need an absolute direction in a subfolder.</color>\n" +
+                                                                                        "Example: to refer to subfolder/text, you need to input this regaredless of your current directory\n" +
                                                                                         "Example: 'cp text.txt folder/text.txt copies text.txt from your current directory to its subfolder folder/\n"); break;
-            case 3:
-                instruction = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
+            case 4:
+                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Use 'make' to decrypt the files and read them.\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
@@ -56,14 +61,16 @@ public class StateMachine : MonoBehaviour
                                                                                         "ls: List all the files & folders in this directory.\n" +
                                                                                         "Those strings with a blue color represents a folder.\n\n" +
                                                                                         "echo: Show the context in files.\n" +
-                                                                                        "rm {$PATH}<file_name>: delete a file in the direction\n" +
-                                                                                        "mv {$PATH}<file_name> {$PATH}<file_name>: move a file to the given place\n" +
-                                                                                        "cp {$PATH}<file_name> {$PATH}<file_name>: copy a file to the given place\n" +
+                                                                                        "rm {$PATH}(file_name): delete a file in the direction\n" +
+                                                                                        "mv {$PATH}(file_name) {$PATH}(file_name): move a file to the given place\n" +
+                                                                                        "cp {$PATH}(file_name) {$PATH}(file_name): copy a file to the given place\n" +
+                                                                                        "<color=#CE9128>You still need an absolute direction in a subfolder.</color>\n" +
+                                                                                        "Example: to refer to subfolder/text, you need to input this regaredless of your current directory\n" +
                                                                                         "Example: 'cp text.txt folder/text.txt copies text.txt from your current directory to its subfolder folder/\n\n" +
-                                                                                        "sudo apt install <file>: install the file\n" +
+                                                                                        "sudo apt install (file): install the file\n" +
                                                                                         "make: Will follow the instructions in the Makefile\n"); break;
-            case 4:
-                instruction = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
+            case 5:
+                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Decrypt the files in Professor_Emails and find your NetID.\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
@@ -72,14 +79,16 @@ public class StateMachine : MonoBehaviour
                                                                                         "ls: List all the files & folders in this directory.\n" +
                                                                                         "Those strings with a blue color represents a folder.\n\n" +
                                                                                         "echo: Show the context in files.\n" +
-                                                                                        "rm {$PATH}<file_name>: delete a file in the direction\n" +
-                                                                                        "mv {$PATH}<file_name> {$PATH}<file_name>: move a file to the given place\n" +
-                                                                                        "cp {$PATH}<file_name> {$PATH}<file_name>: copy a file to the given place\n" +
+                                                                                        "rm {$PATH}(file_name): delete a file in the direction\n" +
+                                                                                        "mv {$PATH}(file_name) {$PATH}(file_name): move a file to the given place\n" +
+                                                                                        "cp {$PATH}(file_name) {$PATH}(file_name): copy a file to the given place\n" +
+                                                                                        "<color=#CE9128>You still need an absolute direction in a subfolder.</color>\n" +
+                                                                                        "Example: to refer to subfolder/text, you need to input this regaredless of your current directory\n" +
                                                                                         "Example: 'cp text.txt folder/text.txt copies text.txt from your current directory to its subfolder folder/\n\n" +
-                                                                                        "sudo apt install <file>: install the file\n" +
+                                                                                        "sudo apt install (file): install the file\n" +
                                                                                         "make: Will follow the instructions in the Makefile\n"); break;
-            case 5:
-                instruction = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
+            case 6:
+                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Submit your cs400 coursework\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
@@ -88,22 +97,24 @@ public class StateMachine : MonoBehaviour
                                                                                         "ls: List all the files & folders in this directory.\n" +
                                                                                         "Those strings with a blue color represents a folder.\n\n" +
                                                                                         "echo: Show the context in files.\n" +
-                                                                                        "rm {$PATH}<file_name>: delete a file in the direction\n" +
-                                                                                        "mv {$PATH}<file_name> {$PATH}<file_name>: move a file to the given place\n" +
-                                                                                        "cp {$PATH}<file_name> {$PATH}<file_name>: copy a file to the given place\n" +
+                                                                                        "rm {$PATH}(file_name): delete a file in the direction\n" +
+                                                                                        "mv {$PATH}(file_name) {$PATH}(file_name): move a file to the given place\n" +
+                                                                                        "cp {$PATH}(file_name) {$PATH}(file_name): copy a file to the given place\n" +
+                                                                                        "<color=#CE9128>You still need an absolute direction in a subfolder.</color>\n" +
+                                                                                        "Example: to refer to subfolder/text, you need to input this regaredless of your current directory\n" +
                                                                                         "Example: 'cp text.txt folder/text.txt copies text.txt from your current directory to its subfolder folder/\n\n" +
-                                                                                        "sudo apt install <file>: install the file\n" +
+                                                                                        "sudo apt install (file): install the file\n" +
                                                                                         "make: Will follow the instructions in the Makefile\n" +
                                                                                         "cs400 submit: The way to submit your coursework\n"); break;
-            case 6:
-                instruction = new File("instruction.txt", "The goal of the game is to <b><color=#b71013>accompany Samantha</color></b>.\n" +
+            case 7:
+                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to <b><color=#b71013>accompany Samantha</color></b>.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Curent Mision: Ansr m qwstons.\n\n\n" +
                                                                                         "If you don't understand it, it's fine.\n" +
                                                                                         "Just stay with me.\n" +
                                                                                         "<b><color=#b71013>All the instruction hints are deleted.</color></b>\n"); break;
-            case 7:
-                instruction = new File("instruction.txt", "The goal of the game is to <b><color=#b71013>accompany Samantha!</color></b>\n\n" +
+            case 8:
+                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to <b><color=#b71013>accompany Samantha!</color></b>\n\n" +
                                                      "<b><color=#b71013>WHY ARE YOU STILL CHECKING THE MISSIONS?</color></b>" +
                                                      "<b><color=#b71013>Type Samantha. Always. PLEASE</color></b>"); break;
 
@@ -387,11 +398,24 @@ public class StateMachine : MonoBehaviour
     void Start()
     {
         UpdateInstruction(0);
+        State = 1;
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (NextState)
+        {
+            NextState = false;
+            State++;
+            UpdateInstruction(State);
+            switch (State)
+            {
+                case 2: EventMachine(2); break;
+                case 3: EventMachine(3); break;
+                case 4: EventMachine(4); break;
+                default: Debug.Log("Undefined State " + State); break;
+            }
+        }
     }
 }

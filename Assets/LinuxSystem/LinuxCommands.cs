@@ -40,8 +40,26 @@ public class LinuxCommands : MonoBehaviour
                 case "nano":
                     instnano(inst);
                     break;
+                case "chmod":
+                    instchmod(inst);
+                    break;
+                case "echo":
+                    instecho(inst);
+                    break;
                 case "cs400":
                     instcs400(inst);
+                    break;
+                case "mv":
+                    instmv(inst);
+                    break;
+                case "cp":
+                    instcp(inst);
+                    break;
+                case "rm":
+                    instrm(inst);
+                    break;
+                case "make":
+                    instmake(inst);
                     break;
                 default:
                     GameManager.AddInstruction("Command not found");
@@ -98,11 +116,207 @@ public class LinuxCommands : MonoBehaviour
         GameManager.AddInstruction("Oh, funny! You want to cheat on your coursework?", 1);
         GameManager.AddInstruction("Never-ever!",0.5f);
     }
+    
+    private void instchmod(string inst)
+    {
+        GameManager.AddInstruction("Oh, funny! You want to control the system fully?", 1);
+        //Cases of anger
+        GameManager.AddInstruction("I'm sorry.", 1);
+        GameManager.AddInstruction("I cannot give you this chance.", 0.5f);
+    }
+
+    private void instecho(string inst)
+    {
+        if (GameManager.LockInstruction[0])
+        {
+            GameManager.AddInstruction("This command is currently locked.");
+            GameManager.AddInstruction("Try again later.");
+            return;
+        }
+        // Trim \r and \n characters from the string but not spaces
+        inst = inst.Trim('\r', '\n');
+
+        // Check if the input starts and ends with double quotes
+        if (inst.StartsWith("\"") && inst.EndsWith("\""))
+        {
+            // Remove the double quotes and print the content
+            string content = inst.Substring(1, inst.Length - 2);
+            GameManager.AddInstruction(content);
+        }
+        else
+        {
+            // Check if the file exists in the current folder
+            Folder currentFolder = GameManager.currFolder;  // Assuming you have the current folder reference
+
+            // Try to find the file in the current folder
+            File? foundFile = currentFolder.files.Find(f => f.name == inst);
+
+            if (foundFile != null)
+            {
+                // Print the file content if found
+                GameManager.AddInstruction(foundFile.Value.content);
+            }
+            else
+            {
+                // Print error if file not found
+                GameManager.AddInstruction("***Error: File not found***");
+            }
+        }
+    }
+
+    private void instmv(string inst)
+    {
+        if (GameManager.LockInstruction[1])
+        {
+            GameManager.AddInstruction("The instruction is locked currently. Try again later.");
+            return;
+        }
+
+        string[] args = inst.Split(' ');
+        if (args.Length < 2)
+        {
+            GameManager.AddInstruction("Usage: mv (source) (destination)");
+            return;
+        }
+
+        string sourcePath = args[0];
+        string destinationPath = args[1];
+
+        // Find the source file
+        File? sourceFile = FindFileByPath(sourcePath, FileDirection.root);
+
+        if (sourceFile == null)
+        {
+            GameManager.AddInstruction("Source file not found.");
+            return;
+        }
+
+        // Find the destination folder (should be an existing folder path)
+        string[] destinationPathParts = destinationPath.Split('/');
+        string destinationFolderPath = string.Join("/", destinationPathParts, 0, destinationPathParts.Length - 1);
+        Folder destinationFolder = FindFolder(FileDirection.root, destinationFolderPath);
+
+        if (destinationFolder.name == null)
+        {
+            GameManager.AddInstruction("Destination folder not found.");
+            return;
+        }
+
+        // Add the file to the destination folder
+        destinationFolder.AddFile(sourceFile.Value.name, sourceFile.Value.content);
+
+        // Remove the file from its original location
+        if (!RemoveFileByPath(sourcePath, FileDirection.root))
+        {
+            GameManager.AddInstruction("Failed to remove the file from the original location.");
+            return;
+        }
+
+        GameManager.AddInstruction($"Moved {sourcePath} to {destinationPath}");
+    }
+
+    private void instcp(string inst)
+    {
+        if (GameManager.LockInstruction[1])
+        {
+            GameManager.AddInstruction("The instruction is locked currently. Try again later.");
+            return;
+        }
+
+        string[] args = inst.Split(' ');
+        if (args.Length < 2)
+        {
+            GameManager.AddInstruction("Usage: cp (source) (destination)");
+            return;
+        }
+
+        string sourcePath = args[0];
+        string destinationPath = args[1];
+
+        // Find the source file
+        File? sourceFile = FindFileByPath(sourcePath, FileDirection.root);
+
+        if (sourceFile == null)
+        {
+            GameManager.AddInstruction("Source file not found.");
+            return;
+        }
+        if (sourcePath.Substring(sourcePath.Length - 8) == "1017.txt")
+        {
+            GameManager.NumberOf1017++;
+        }
+
+        // Find the destination folder (should be an existing folder path)
+        string[] destinationPathParts = destinationPath.Split('/');
+        string destinationFolderPath = string.Join("/", destinationPathParts, 0, destinationPathParts.Length - 1);
+        Folder destinationFolder = FindFolder(FileDirection.root, destinationFolderPath);
+
+        if (destinationFolder.name == null)
+        {
+            GameManager.AddInstruction("Destination folder not found.");
+            return;
+        }
+
+        // Add a copy of the file to the destination folder
+        destinationFolder.AddFile(sourceFile.Value.name, sourceFile.Value.content);
+
+        GameManager.AddInstruction($"Copied {sourcePath} to {destinationPath}");
+    }
+    private void instrm(string inst)
+    {
+        if (GameManager.LockInstruction[1])
+        {
+            GameManager.AddInstruction("The instruction is locked currently. Try again later.");
+            return;
+        }
+
+        string[] args = inst.Split(' ');
+        if (args.Length < 1)
+        {
+            GameManager.AddInstruction("Usage: rm (path)");
+            return;
+        }
+
+        string targetPath = args[0];
+
+        // Remove the file
+        if (!RemoveFileByPath(targetPath, FileDirection.root))
+        {
+            GameManager.AddInstruction("File not found or could not be removed.");
+            return;
+        }
+        if (targetPath.Substring(targetPath.Length-8)=="1017.txt")
+        {
+            GameManager.NumberOf1017--;
+        }
+        GameManager.AddInstruction($"Removed {targetPath}");
+    }
+
+    private void instmake(string inst)
+    {
+        if (GameManager.LockInstruction[2])
+        {
+            GameManager.AddInstruction("The instruction is locked currently. Try again later.");
+            return;
+        }
+        //Implement this method
+        
+    }
 
     private void instcs400(string inst)
     {
         //Debug.Log(inst);
         //Debug.Log(inst.Trim().Replace("\n", "").Replace("\r", ""));
+        if (GameManager.LockInstruction[4])
+        {
+            GameManager.AddInstruction("Command locked by administrator.");
+            return;
+        }
+        if (GameManager.currFolder.name!="P214.Integration")
+        {
+            GameManager.AddInstruction("Please enter the submission folder to run this command.");
+            return;
+        }
         switch (inst.Trim().Replace("\n", "").Replace("\r", ""))
         {
             case "submit":
@@ -114,6 +328,8 @@ public class LinuxCommands : MonoBehaviour
                 //Some checks. Need further design
                 GameManager.inprogram = false;
                 break;
+            case "init": break;
+                //This is a cheat code, allowing player to go to the final state
             default:
                 GameManager.AddInstruction("Invalid parameter for command 'cs400'.");
                 GameManager.AddInstruction("Try again.");
@@ -129,7 +345,7 @@ public class LinuxCommands : MonoBehaviour
         Debug.Log(inst);
         if (inst.Trim().Replace("\n", "").Replace("\r", "") == "Mycs400")
         {
-            if (!GameManager.GameEvent[0])
+            if (StateMachine.State<=6)
             {
                 GameManager.AddInstruction("Cheater! Go away!",2);
                 GameManager.AddInstruction("Farewell.",114.5f);
@@ -142,18 +358,127 @@ public class LinuxCommands : MonoBehaviour
         }
         else
         {
-            if (!GameManager.GameEvent[0])
+            if (StateMachine.State==1)
             {
                 //Addinstructions.
-                GameManager.AddInstruction("Oh... you input a wrong name...",1f);
-                GameManager.GameEvent[0] = true;
+                GameManager.AddInstruction("Oh... you input a wrong name...",2.5f);
+                GameManager.AddInstruction("Why? You don't remember your name?", 2f);
+                GameManager.AddInstruction("That's so strange, honey.", 1.5f);
+                GameManager.AddInstruction("To deal with this accident,", 1f);
+                GameManager.AddInstruction("I have remembered your name for you.", 3f);
+                GameManager.AddInstruction("Look, you should have a folder with your note throughout the semester.",2f);
+                GameManager.AddInstruction("One was so impressive and I forgot to put it back into the folder...", 2f);
+                GameManager.AddInstruction("Please help me categorize them neatly...",1f);
+                GameManager.AddInstruction("Simple... right? just a single 'mv'...",2f);
+                GameManager.AddInstruction("Use 'cd' first and then 'echo instruction.txt' if you still cannot do it.", 1f);
+                GameManager.AddInstruction("Go ahead!");
+                GameManager.LockInstruction[1] = false;
+                StateMachine.NextState = true;
             }
             else
             {
-                GameManager.AddInstruction("This is not your name......",2f);
+                GameManager.AddInstruction("This is not your ID......",2f);
                 GameManager.AddInstruction("I know it.");
             }
         }
+    }
+    private static File? FindFileByPath(string path, Folder currentFolder)
+    {
+        string[] pathParts = path.Split('/');
+
+        // If there are folders in the path
+        if (pathParts.Length > 1)
+        {
+            string nextFolderName = pathParts[0];
+            string remainingPath = string.Join("/", pathParts, 1, pathParts.Length - 1);
+
+            // Recursively navigate to the appropriate subfolder
+            foreach (var subFolder in currentFolder.subFolders)
+            {
+                if (subFolder.name == nextFolderName)
+                {
+                    return FindFileByPath(remainingPath, subFolder);
+                }
+            }
+
+            return null; // Folder not found
+        }
+        else
+        {
+            // Search the file directly in the current folder
+            foreach (var file in currentFolder.files)
+            {
+                if (file.name == pathParts[0])
+                {
+                    return file;
+                }
+            }
+
+            return null; // File not found
+        }
+    }
+
+    private static bool RemoveFileByPath(string path, Folder currentFolder)
+    {
+        string[] pathParts = path.Split('/');
+
+        // If there are folders in the path
+        if (pathParts.Length > 1)
+        {
+            string nextFolderName = pathParts[0];
+            string remainingPath = string.Join("/", pathParts, 1, pathParts.Length - 1);
+
+            // Recursively navigate to the appropriate subfolder
+            foreach (var subFolder in currentFolder.subFolders)
+            {
+                if (subFolder.name == nextFolderName)
+                {
+                    return RemoveFileByPath(remainingPath, subFolder);
+                }
+            }
+
+            return false; // Folder not found
+        }
+        else
+        {
+            // Search and remove the file directly in the current folder
+            for (int i = 0; i < currentFolder.files.Count; i++)
+            {
+                if (currentFolder.files[i].name == pathParts[0])
+                {
+                    currentFolder.files.RemoveAt(i);
+                    return true; // File removed successfully
+                }
+            }
+
+            return false; // File not found
+        }
+    }
+
+    private static Folder FindFolder(Folder currentFolder, string direct)
+    {
+        // If we're at the root or at the folder itself
+        if (string.IsNullOrEmpty(direct) || direct == currentFolder.name)
+        {
+            return currentFolder;
+        }
+
+        // Split the path into its components
+        string[] pathParts = direct.Split('/');
+        string nextFolderName = pathParts[0];
+        string remainingPath = string.Join("/", pathParts, 1, pathParts.Length - 1);
+
+        // Traverse through subfolders to find the desired folder
+        foreach (var subFolder in currentFolder.subFolders)
+        {
+            if (subFolder.name == nextFolderName)
+            {
+                // Recursively find the next folder down the path
+                return FindFolder(subFolder, remainingPath);
+            }
+        }
+
+        return new Folder(); // Return an empty folder if not found
     }
     void Start()
     {
