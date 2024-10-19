@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-public struct File
+public class File
 {
     public string name;
     public string content;
@@ -49,6 +49,7 @@ public class FileDirection : MonoBehaviour
     // Start is called before the first frame update
     public static void list(Folder currentFolder)
     {
+        Debug.Log(GameManager.currFolder.files.Count);
         if (currentFolder == null)
         {
             GameManager.AddInstruction("***Directory not found***");
@@ -71,7 +72,7 @@ public class FileDirection : MonoBehaviour
 
         foreach (var file in currentFolder.files)
         {
-            output += file.name + "  ";  // Show files
+            output += file.name + "    ";  // Show files
         }
 
         // Output result to GameManager
@@ -127,6 +128,7 @@ public class FileDirection : MonoBehaviour
         while (current.name != root.name)
         {
             folderNames.Insert(0, current.name);
+            Debug.Log(current.name);
             current = FindParentFolder(current, root);  // Helper to find parent folder
         }
 
@@ -136,14 +138,22 @@ public class FileDirection : MonoBehaviour
     // Helper to find the parent folder of the current folder, starting from root
     private static Folder FindParentFolder(Folder folder, Folder current)
     {
+        Debug.Log("Enter Function: folder=" + folder.name + ", current=" + current.name);
         foreach (var subFolder in current.subFolders)
         {
             if (subFolder.name == folder.name)
+            {
+                Debug.Log(folder.name + " " + subFolder.name);
                 return current;
-
+            }
+        }
+        foreach (var subFolder in current.subFolders)
+        {
+            Debug.Log(subFolder.name);
             var foundFolder = FindParentFolder(folder, subFolder);
             if (foundFolder != null)
-                return foundFolder;
+                if (foundFolder.name!="")
+                    return foundFolder;
         }
         return new Folder();  // Return an empty folder if not found
     }
@@ -172,7 +182,7 @@ public class FileDirection : MonoBehaviour
     }
     void Awake()
     {
-        root.AddFile("Instruction.txt", "This is the instruction");
+        root.AddFile("instruction.txt", "This is the instruction");
         Debug.Log(root.files[0].name);
         //Construct Folders
         root.AddSubFolder(new Folder("P214.Integration"));

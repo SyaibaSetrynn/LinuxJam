@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.WSA;
 
 public class StateMachine : MonoBehaviour
 {
@@ -13,10 +15,26 @@ public class StateMachine : MonoBehaviour
     public static void UpdateInstruction(int state)
     {
         //Debug.Log("Instruction Updated");
+        bool flag = false;
+        int index = 0;
+        foreach (var file in FileDirection.root.files)
+        {
+            if (file.name == "instruction.txt") { flag = true; break; }
+            index++;
+        }
+        if (index>=FileDirection.root.files.Count) 
+        {
+            index = 0;
+        }
+        if (!flag)
+        {
+            FileDirection.root.AddFile("instruction.txt", "0");
+            index = FileDirection.root.files.Count-1;
+        }
         switch (state)
         {
             case 0:
-                FileDirection.root.files[0] = new File("instruction.txt", "Welcome to the game!\n\n" +
+                FileDirection.root.files[index] = new File("instruction.txt", "Welcome to the game!\n\n" +
                                                                                         "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Submit cs400 work\n\n\n" +
@@ -26,18 +44,7 @@ public class StateMachine : MonoBehaviour
                                                                                         "ls: List all the files & folders in this directory.\n" +
                                                                                         "Those strings with a blue color represents a folder.\n"); break;
             case 2:
-                FileDirection.root.files[0] = new File("instruction.txt", "Welcome to the game!\n\n" +
-                                                                                        "The goal of the game is to submit your final homework successfully.\n" +
-                                                                                        "Follow the instructions and complete the missions.\n\n" +
-                                                                                        "Current Mission: Find your own name\n\n\n" +
-                                                                                        "cd: Change direction to any subfolders.\n" +
-                                                                                        "Ex: cd subfolder/subfolder2 Redirects you to the subfolder2 of the subfolder in this directory.\n" +
-                                                                                        "Use cd alone to return root direction\n\n" +
-                                                                                        "ls: List all the files & folders in this directory.\n" +
-                                                                                        "Those strings with a blue color represents a folder.\n\n" +
-                                                                                        "echo: Show the context in files.\n"); break;
-            case 3:
-                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
+                FileDirection.root.files[index] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Move '1017.txt' to the correct place\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
@@ -52,8 +59,8 @@ public class StateMachine : MonoBehaviour
                                                                                         "<color=#CE9128>You still need an absolute direction in a subfolder.</color>\n" +
                                                                                         "Example: to refer to subfolder/text, you need to input this regaredless of your current directory\n" +
                                                                                         "Example: 'cp text.txt folder/text.txt copies text.txt from your current directory to its subfolder folder/\n"); break;
-            case 4:
-                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
+            case 3:
+                FileDirection.root.files[index] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Use 'make' to decrypt the files and read them.\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
@@ -70,10 +77,10 @@ public class StateMachine : MonoBehaviour
                                                                                         "Example: 'cp text.txt folder/text.txt copies text.txt from your current directory to its subfolder folder/\n\n" +
                                                                                         "sudo apt install (file): install the file\n" +
                                                                                         "make: Will follow the instructions in the Makefile\n"); break;
-            case 5:
-                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
+            case 4:
+                FileDirection.root.files[index] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
-                                                                                        "Current Mission: Decrypt the files in Professor_Emails and find your NetID.\n\n\n" +
+                                                                                        "Current Mission: Explore Professor_Emails and find your NetID.\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
                                                                                         "Ex: cd subfolder/subfolder2 Redirects you to the subfolder2 of the subfolder in this directory.\n" +
                                                                                         "Use cd alone to return root direction\n\n" +
@@ -89,7 +96,7 @@ public class StateMachine : MonoBehaviour
                                                                                         "sudo apt install (file): install the file\n" +
                                                                                         "make: Will follow the instructions in the Makefile\n"); break;
             case 6:
-                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
+                FileDirection.root.files[index] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Current Mission: Submit your cs400 coursework\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
@@ -108,14 +115,14 @@ public class StateMachine : MonoBehaviour
                                                                                         "make: Will follow the instructions in the Makefile\n" +
                                                                                         "cs400 submit: The way to submit your coursework\n"); break;
             case 7:
-                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to <b><color=#b71013>accompany Samantha</color></b>.\n" +
+                FileDirection.root.files[index] = new File("instruction.txt", "The goal of the game is to <b><color=#b71013>accompany Samantha</color></b>.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
                                                                                         "Curent Mision: Ansr m qwstons.\n\n\n" +
                                                                                         "If you don't understand it, it's fine.\n" +
                                                                                         "Just stay with me.\n" +
                                                                                         "<b><color=#b71013>All the instruction hints are deleted.</color></b>\n"); break;
             case 8:
-                FileDirection.root.files[0] = new File("instruction.txt", "The goal of the game is to <b><color=#b71013>accompany Samantha!</color></b>\n\n" +
+                FileDirection.root.files[index] = new File("instruction.txt", "The goal of the game is to <b><color=#b71013>accompany Samantha!</color></b>\n\n" +
                                                      "<b><color=#b71013>WHY ARE YOU STILL CHECKING THE MISSIONS?</color></b>" +
                                                      "<b><color=#b71013>Type Samantha. Always. PLEASE</color></b>"); break;
 
@@ -128,7 +135,10 @@ public class StateMachine : MonoBehaviour
         switch (state) //Not all states from 0 to 9 will activate the StateMachine
         {
             case 2: 
-                CreateBerman(); 
+                CreateBerman();
+                GameManager.LockInstruction[4] = true;
+                GameManager.LockInstruction[2] = false;
+                GameManager.LockInstruction[1] = false;
                 break;
             case 3:
                 GameManager.AddInstruction("Wow, thank you!", 1f);
@@ -142,11 +152,27 @@ public class StateMachine : MonoBehaviour
                 CreateSamantha(false); 
                 break;
             case 4:
+                GameManager.Executing = true;
                 GameManager.AddInstruction("I'm so glad you read all of them!",1.5f);
                 GameManager.AddInstruction("How was that? Are you touched?",1.5f);
                 GameManager.AddInstruction("As a reward, I decided to give you your NetID.", 3f);
                 GameManager.AddInstruction("But only if you find it by yourself...", 1f);
                 CreateProfEmail(); 
+                break;
+            case 5:
+                if (GameManager.ReqGiveUp) NextState=true;
+                GameManager.LockInstruction[4] = false;
+                break;
+            case 6:
+                GameManager.LockInstruction[3] = false;
+                //Instructions: Questioning
+                GameManager.AddInstruction("Let's play a Q&A game!");
+                GameManager.AddInstruction("Please enter 'sudo apt install Samantha' to install the module.");
+                break;
+            case 7:
+                //^_^
+                GameManager.AddInstruction("Be careful!");
+                GameManager.AddInstruction("If you don't answer it right, I'll be angry with you.");
                 break;
             default: break;
         }
@@ -173,58 +199,58 @@ public class StateMachine : MonoBehaviour
         tf.AddSubFolder(new Folder("November"));
         tf.AddSubFolder(new Folder("December"));
         Folder sept = tf.subFolders[0];
-        sept.AddFile("0904.txt", "<Normal Computer Science Note>\n" +
+        sept.AddFile("0904.txt", "(Normal Computer Science Note)\n" +
                                                 "Today is my first day taking cs400.\n" +
                                                 "It's a little difficult, but easy to handle.\n");
-        sept.AddFile("0911.txt", "<Normal Computer Science Note>\n" +
+        sept.AddFile("0911.txt", "(Normal Computer Science Note)\n" +
                                                "Today is my second day taking cs400.\n" +
                                                "I'm getting used to it.'\n");
-        sept.AddFile("0918.txt", "<Normal Computer Science Note>\n" +
+        sept.AddFile("0918.txt", "(Normal Computer Science Note)\n" +
                                                "Everything works very well today.\n");
-        sept.AddFile("0925.txt", "<Normal Computer Science Note>\n" +
+        sept.AddFile("0925.txt", "(Normal Computer Science Note)\n" +
                                                "Important Notice:\n" +
                                                "First exam on October 11th\n");
         Folder oct = tf.subFolders[1];
-        oct.AddFile("1003.txt", "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n" +
-                                              "<Normal Computer Science Note>\n\n" +
+        oct.AddFile("1003.txt", "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n" +
+                                              "(Normal Computer Science Note)\n\n" +
                                               "The content today is very difficult. Need more practive\n");
-        oct.AddFile("1010.txt", "<Computer Science Review Note>\n" +
+        oct.AddFile("1010.txt", "(Computer Science Review Note)\n" +
                                              "Wish a good grade tomorrow!\n");
-        oct.AddFile("1024.txt", "<Normal Computer Science Note>\n" +
+        oct.AddFile("1024.txt", "(Normal Computer Science Note)\n" +
                                              "I know that there are alot of AI generators.\n" +
                                              "I didn't know that my virtual machie for coursework also have one.\n");
-        oct.AddFile("1031.txt", "<Normal Computer Science Note>\n" +
+        oct.AddFile("1031.txt", "(Normal Computer Science Note)\n" +
                                              "She is so helpful with coursework.\n" +
                                              "She can even correct my answers for a better grade.\n" +
                                              "She can do anything.\n" +
                                              "She's my god.");
         Folder nov = tf.subFolders[2];
-        nov.AddFile("1107.txt", "<Normal Computer Science Note>\n" +
+        nov.AddFile("1107.txt", "(Normal Computer Science Note)\n" +
                                               "She has her own personality.\n" +
                                               "I feel like chatting with a real person.\n" +
                                               "How lucky I am!\n");
-        nov.AddFile("1114.txt", "<Normal Computer Science Note>\n" +
+        nov.AddFile("1114.txt", "(Normal Computer Science Note)\n" +
                                               "Nothing special today.\n");
-        nov.AddFile("1121.txt", "<Normal Computer Science Note>\n" +
+        nov.AddFile("1121.txt", "(Normal Computer Science Note)\n" +
                                               "The professor talked about the limitations of Generative AI today.\n" +
                                               "Finally, I realized that she's still a machine though the response looks like from human.\n");
-        nov.AddFile("1128.txt", "<Normal Computer Science Note>\n" +
+        nov.AddFile("1128.txt", "(Normal Computer Science Note)\n" +
                                               "My friend helped me activated ChatGPT 4.0.\n" +
                                               "It is even better.\n");
         Folder dec = tf.subFolders[3];
-        dec.AddFile("1205.txt", "<Normal Computer Science Note>\n" +
+        dec.AddFile("1205.txt", "(Normal Computer Science Note)\n" +
                                               "I believe that the existance of AI is abnormal.\n" +
                                               "Reminder: email this issue with the professor");
-        dec.AddFile("1212.txt", "<Normal Computer Science Note>\n" +
+        dec.AddFile("1212.txt", "(Normal Computer Science Note)\n" +
                                               "The professor suggested uninstall the machine and rebuild a new one.\n" +
                                               "I tried, and it works! However, it works gradually.\n" +
                                               "I tried multiple times, every time it was showing less and less words.\n" +
@@ -234,7 +260,10 @@ public class StateMachine : MonoBehaviour
     }
     public static void CreateSamantha(bool made)
     {
-        FileDirection.root.AddSubFolder(new Folder("Project_Samantha"));
+        if (FileDirection.root.subFolders.Count <= 2)
+        {
+            FileDirection.root.AddSubFolder(new Folder("Project_Samantha"));
+        }
         Folder ft = FileDirection.root.subFolders[2];
         if (made)
         {
@@ -274,11 +303,11 @@ public class StateMachine : MonoBehaviour
         }
         else
         {
-            ft.AddFile("First_Time_Impression.sns", "Jp^!]3Ut=V7KghOzXWrYF)>Bu~2T0gOZqZ28yG-?Jz}g0]NrhGIh|9yX]fCmZDrqZ/1J7\r\n;kl6UAmnEiqtr>(fmU7#jDVu;!C");
-            ft.AddFile("Cooperation.sns", "Dm)H8>y1TLdOG67p*Ah&RBsjCV@ehksz,o0B?RU60fW8.)RDEAxMsVty5+-O(8rKGtrZ<PBSNp7iuW8'5/fYZg)y\"imltpzx%UJq");
+            ft.AddFile("First_Time_Impression.sns", "Jp^!]3Ut=V7KghOzXWrYF))Bu~2T0gOZqZ28yG-?Jz}g0]NrhGIh|9yX]fCmZDrqZ/1J7\r\n;kl6UAmnEiqtr)(fmU7#jDVu;!C");
+            ft.AddFile("Cooperation.sns", "Dm)H8)y1TLdOG67p*Ah&RBsjCV@ehksz,o0B?RU60fW8.)RDEAxMsVty5+-O(8rKGtrZ<PBSNp7iuW8'5/fYZg)y\"imltpzx%UJq");
             ft.AddFile("Fun_Moment.sns", "SM@WJ6:uQiEoPMtq89WBu]gogIu:k<j%RibwrWYm^AOKxzXeKlYyP|-J4K13}#pa7QzHM(X:.{kVYEsa+Ng*~uJ!~pLRtnbsF");
-            ft.AddFile("Please_Understand_Me.sns", "[}SRpy6tyvi'3mz]E@d>gVR,y2o\":bNQX\r\n$BkmxlUIOE2EmLXq5av1+98ho7IwGSxC-jRMDAvl4lKtEM.5K?CfcGZ59VOZI");
-            ft.AddFile("IMPORTANT_NOTICE.sns", "$;abEsMY^>tU<jc&3PMGofkc76sJgZBgxJ]~]gT)T|7UoNgQn9dyVbI7^7WBbmOXS_FhS[aP?N|GzH98Q_VbnAwS8]tUlX[?Z");
+            ft.AddFile("Please_Understand_Me.sns", "[}SRpy6tyvi'3mz]E@d)gVR,y2o\":bNQX\r\n$BkmxlUIOE2EmLXq5av1+98ho7IwGSxC-jRMDAvl4lKtEM.5K?CfcGZ59VOZI");
+            ft.AddFile("IMPORTANT_NOTICE.sns", "$;abEsMY^)tU(jc&3PMGofkc76sJgZBgxJ]~]gT)T|7UoNgQn9dyVbI7^7WBbmOXS_FhS[aP?N|GzH98Q_VbnAwS8]tUlX[?Z");
             ft.AddFile("Makefile", "Permission Denied.\nPermission denied by Samantha\n");
         }
     }
@@ -302,7 +331,7 @@ public class StateMachine : MonoBehaviour
                                                                                                        "    Let me know if you have any more questions!\n" +
                                                                                                        "Best,\n" +
                                                                                                        "Professor Huffman\n");
-        ft.AddSubFolder(new Folder("Next_Email"));
+        ft.AddSubFolder(new Folder("Next_Email(5)"));
         ft = ft.subFolders[0];
         ft.AddFile("Title:Where_can_I_submit",  "Hi professor,\n" +
                                                                                                        "    I've listened to the course carefully but still don't understand\n" +
@@ -319,7 +348,7 @@ public class StateMachine : MonoBehaviour
                                                                                                        "    Check canvas and piazza for more information.\n" +
                                                                                                        "Best,\n" +
                                                                                                        "Professor Huffman\n");
-        ft.AddSubFolder(new Folder("Next_Email"));
+        ft.AddSubFolder(new Folder("Next_Email(4)"));
         ft = ft.subFolders[0];
         ft.AddFile("Title:Regrade_Request",                                     "Hi professor,\n" +
                                                                                                        "    Can you help me check my grade? It is said that I only get 68 in\n" +
@@ -336,7 +365,7 @@ public class StateMachine : MonoBehaviour
                                                                                                        "    Hope you perform better in following exams.\n" +
                                                                                                        "Best,\n" +
                                                                                                        "Professor Huffman\n");
-        ft.AddSubFolder(new Folder("Next_Email"));
+        ft.AddSubFolder(new Folder("Next_Email(3)"));
         ft = ft.subFolders[0];
         ft.AddFile("Title:How_to_study_more_efficiently", "Hi professor,\n" +
                                                                                                        "    I've tried so hard preparing for homeworks and exams. However,\n" +
@@ -352,7 +381,7 @@ public class StateMachine : MonoBehaviour
                                                                                                        "    Hope my information helps you.\n" +
                                                                                                        "Best,\n" +
                                                                                                        "Professor Huffman\n");
-        ft.AddSubFolder(new Folder("Next_Email"));
+        ft.AddSubFolder(new Folder("Next_Email(2)"));
         ft = ft.subFolders[0];
         ft.AddFile("Title:Something_Wrong_With_My_Machine", "Hi professor,\n" +
                                                                                                        "    There is something wrong with machine. I always find extra comments\n" +
@@ -379,7 +408,7 @@ public class StateMachine : MonoBehaviour
                                                                                                        "    Thanks for your help! I don't think I need a promo code.\n" +
                                                                                                        "Yours,\n" +
                                                                                                        "Berman\n");
-        ft.AddSubFolder(new Folder("Next_Email"));
+        ft.AddSubFolder(new Folder("Next_Email(1)"));
         ft = ft.subFolders[0];
         ft.AddFile("Title:Trouble_submitting_the_final_assignment", "Hi professor,\n" +
                                                                                                        "    The issue of that AI continues and it makes it difficult to submit anything.\n" +
@@ -435,6 +464,8 @@ public class StateMachine : MonoBehaviour
                 case 2: EventMachine(2); break;
                 case 3: EventMachine(3); break;
                 case 4: EventMachine(4); break;
+                case 5: EventMachine(5); break;
+                case 6: EventMachine(6); break;
                 default: Debug.Log("Undefined State " + State); break;
             }
         }
@@ -442,18 +473,19 @@ public class StateMachine : MonoBehaviour
         {
             switch (State) // Now, Check every critical points.
             {
-                case 2: CheckState2(); break;
+                case 2: /*CheckState2();*/ break;
                 case 3: CheckState3(); break;
-                case 4: CheckState4(); break;
-                default: Debug.Log("State=" + State); break;
+                case 4: CheckState4(); /*Abort*/ break;
+                case 5: CheckState5(); break;
+
+                default: /*Debug.Log("State=" + State);*/ break;
             }
         }
     }
     private void CheckState2()
     {
         var subFolder = FileDirection.root.subFolders[1].subFolders[1];
-        // Check if the number of files is 5
-        if (subFolder.files.Count == 5)
+        if (subFolder.files.Count == 5 && GameManager.NumberOf1017==1)
         {
             // Look for the file named "1017.txt"
             bool found = subFolder.files.Any(file => file.name == "1017.txt");
@@ -462,6 +494,7 @@ public class StateMachine : MonoBehaviour
             if (found)
             {
                 NextState = true;
+                GameManager.LockInstruction[2] = false;
             }
         }
     }
@@ -474,10 +507,11 @@ public class StateMachine : MonoBehaviour
     }
     private void CheckState4()
     {
-        if (GameManager.currFolder==Trigger5Folder && GameManager.NetIDReq)
-        {
-            //ø®ƒ„“ªœ¬œ»
-            NextState= true;
-        }
+        
+    }
+
+    private void CheckState5()
+    {
+        //Already in LinuxCommand
     }
 }

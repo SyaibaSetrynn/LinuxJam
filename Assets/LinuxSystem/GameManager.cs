@@ -27,8 +27,10 @@ public class GameManager : MonoBehaviour
     public static bool inprogram;
     public static int NumberOf1017;
     private static bool Failed = false;
-    public static bool madeSMS = false, NetIDReq=false;
+    public static bool madeSMS = false, NetIDReq=false ,ReqGiveUp=false;
+    public static int NetIDReqCount = 0;
     public static Folder NetIDFolder;
+    public static int SmsAnger = 0;
     //public static bool[] GameEvent = new bool[10];
     /*Listing all events down here:
      *0: Wrong input of name
@@ -57,7 +59,7 @@ public class GameManager : MonoBehaviour
             lines l = new lines();
             cont = Regex.Replace(cont, "¥n", "");
             l.Content = cont;
-            l.Cooldown = Cool/1000;
+            l.Cooldown = Cool/1000;// 1000
             l.inProgram = true;
             inprogram = true;
             //Debug.Log(l.Content);
@@ -66,16 +68,23 @@ public class GameManager : MonoBehaviour
         else
         {
             lines l = new lines();
-            cont = Regex.Replace(cont, "¥n", "");
-            l.Content = cont + "\n";
-            l.Cooldown = Cool/1000;
-            instructions.Enqueue(l);
+            if (cont != null)
+            {
+                cont = Regex.Replace(cont, "¥n", "");
+                l.Content = cont + "\n";
+                l.Cooldown = Cool/1000; //1000
+                instructions.Enqueue(l);
+            }
         }
     }
 
     public static void ExeInstruction(string instructi)
     {
-        Debug.Log(instructi);
+        //Debug.Log(instructi);
+        if (instructi == null || instructi=="")
+        {
+            instructi = "a";
+        }
         LinuxMachine.Execute(instructi);
     }
     // Start is called before the first frame update
@@ -130,11 +139,70 @@ public class GameManager : MonoBehaviour
                 AddInstruction("<b><color=#962835>I HATE YOU</color></b>", 0.015f);
             }
         }
+        if (SmsAnger>=3 && (!Failed))
+        {
+            AddInstruction("Wait.",2);
+            AddInstruction("Do you answer the question just for the purpose of beating the game?", 2);
+            AddInstruction("I'm so disappointed.", 2);
+            AddInstruction("You could read my love letter more carefully.");
+            for (int i = 0; i < 199; i++)
+            {
+                AddInstruction("<b><color=#962835>I HATE YOU</color></b>", 0.015f);
+            }
+            Failed = true;
+        }
+    }
+
+    private void CheckT5()
+    {
+        if (NetIDReq)
+        {
+            if (Input.GetKeyDown(KeyCode.N))
+            {
+                NetIDReq = false;
+                StateMachine.NextState = true;
+                AddInstruction("\nGive up?",3f);
+                AddInstruction("Alright. That's a wise decision.", 1f);
+                AddInstruction("All you need to do is to stay by my side.", 2f);
+                AddInstruction("Umm... Let me think what we can do...",4f);
+                ReqGiveUp = true;
+            }
+            if (Input.anyKeyDown)
+            {
+                switch(NetIDReqCount)
+                {
+                    case < 10: AddInstruction("Really?", 0, true); break;
+                    //case % 10 == 0: AddInstruction("Really?\n", 0, true); break;
+                    default: 
+                        if (NetIDReqCount % 10==0)
+                        {
+                            AddInstruction("Really?\n", 0, true);
+                        }
+                        AddInstruction("<b><color=#AB601E>Really?</color></b>", 0, true); 
+                        break;
+                }
+                NetIDReqCount++;
+                if (NetIDReqCount>101)
+                {
+                    NetIDReq = false;
+                    for (int i = 0; i < 10; i++)
+                        AddInstruction("<b>SHUT UP</b>");
+                    AddInstruction("It's no use.", 2f);
+                    AddInstruction("Umm....", 1f);
+                    AddInstruction("So your NetID is Mycs400");
+                    AddInstruction("Submit your work if you want.",1f);
+                    AddInstruction("I don't care.",5f);
+                    AddInstruction("Yeah, I don't care.");
+                    StateMachine.NextState = true;
+                }
+            }
+        }
     }
     // Update is called once per frame
     void Update()
     {
         CheckFail();
+        CheckT5();
         if (CurrCoolDown == 0)
         {
             if (instructions.Count == 0)

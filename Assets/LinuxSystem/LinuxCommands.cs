@@ -12,6 +12,10 @@ public class LinuxCommands : MonoBehaviour
     private int step = 0;
     public void Execute(string inst)
     {
+        if (inst.Substring(inst.Length-1,1)=="\n" || inst.Substring(inst.Length-1,1)==" ")
+        {
+            inst = inst.Substring(0, inst.Length - 1);
+        }
         if (!GameManager.inprogram)
         {
             string command;
@@ -60,6 +64,12 @@ public class LinuxCommands : MonoBehaviour
                     break;
                 case "make":
                     instmake(inst);
+                    break;
+                case "sudo":
+                    instsudo(inst);
+                    break;
+                case "cheat":
+                    StateMachine.NextState=true;
                     break;
                 default:
                     GameManager.AddInstruction("Command not found");
@@ -130,6 +140,7 @@ public class LinuxCommands : MonoBehaviour
 
     private void instecho(string inst)
     {
+        bool flagt5 = false;
         if (GameManager.LockInstruction[0])
         {
             GameManager.AddInstruction("This command is currently locked.");
@@ -154,21 +165,15 @@ public class LinuxCommands : MonoBehaviour
             {
                 GameManager.NetIDReq = true;
                 running = "NetIDReq";
-                GameManager.AddInstruction("Oh, why is it not found?", 2f);
-                GameManager.AddInstruction("Haha, I got it!", 1f);
-                GameManager.AddInstruction("You cannot type red bold word right?", 2f);
-                GameManager.AddInstruction("Umm, this is your problem then.....", 2f);
-                GameManager.AddInstruction("Do you really want this NetID?", 1f);
-                GameManager.AddInstruction("Well, if you do, I offer you a chance to ask for it.", 2f);
-                GameManager.AddInstruction("Do you want your NetID? [Y/N]", 0, true);
+                flagt5 = true;
             }
             // Try to find the file in the current folder
-            File? foundFile = currentFolder.files.Find(f => f.name == inst);
+            File foundFile = currentFolder.files.Find(f => f.name == inst);
 
             if (foundFile != null)
             {
                 // Print the file content if found
-                GameManager.AddInstruction(foundFile.Value.content);
+                GameManager.AddInstruction(foundFile.content);
             }
             else
             {
@@ -176,6 +181,48 @@ public class LinuxCommands : MonoBehaviour
                 GameManager.AddInstruction("***Error: File not found***");
             }
         }
+        if (flagt5)
+        {
+            Trigger5();
+        }
+    }
+
+    private void instsudo(string inst)
+    {
+        string[] args = inst.Split(' ');
+        if (args.Length!=3)
+        {
+            GameManager.AddInstruction("Usage: sudo apt get (program name)");
+            return;
+        }
+        if (args[0]!="apt" || args[1]!="install")
+        {
+            GameManager.AddInstruction("Usage: sudo apt get (program name)");
+            return;
+        }
+        if (args[2]!="Samantha")
+        {
+            GameManager.AddInstruction("Searching for the package...", 3f);
+            GameManager.AddInstruction("Error: package not found.", 1f);
+            GameManager.AddInstruction("<b><color=#B71013>The only thing you can find is me.</color></b>");
+            return;
+        }
+        GameManager.AddInstruction("Searching for the package...", 3f);
+        GameManager.AddInstruction("Installing.....", 5f);
+        GameManager.AddInstruction("Installation successful.");
+        GameManager.AddInstruction("Use Samantha -q to start Q&A! ^_^");
+        StateMachine.NextState = true;
+    }
+
+    private void Trigger5()
+    {
+        GameManager.AddInstruction("\nOh, why is it not found?", 2f);
+        GameManager.AddInstruction("Hahahahahaha, I know it!", 1f);
+        GameManager.AddInstruction("You cannot type <b><color=#B71013>red bold word right?</color></b>", 2f);
+        GameManager.AddInstruction("Umm, this is your problem then.....", 2f);
+        GameManager.AddInstruction("Do you really want this NetID?", 1f);
+        GameManager.AddInstruction("Well, if you do, I offer you a chance to ask for it.", 2f);
+        GameManager.AddInstruction("Do you want your NetID? [Y/N]", 0, true);
     }
 
     private void instmv(string inst)
@@ -197,7 +244,7 @@ public class LinuxCommands : MonoBehaviour
         string destinationPath = args[1];
 
         // Find the source file
-        File? sourceFile = FindFileByPath(sourcePath, FileDirection.root);
+        File sourceFile = FindFileByPath(sourcePath, GameManager.currFolder);
 
         if (sourceFile == null)
         {
@@ -208,7 +255,7 @@ public class LinuxCommands : MonoBehaviour
         // Find the destination folder (should be an existing folder path)
         string[] destinationPathParts = destinationPath.Split('/');
         string destinationFolderPath = string.Join("/", destinationPathParts, 0, destinationPathParts.Length - 1);
-        Folder destinationFolder = FindFolder(FileDirection.root, destinationFolderPath);
+        Folder destinationFolder = FindFolder(GameManager.currFolder, destinationFolderPath);
 
         if (destinationFolder.name == null)
         {
@@ -217,13 +264,16 @@ public class LinuxCommands : MonoBehaviour
         }
 
         // Add the file to the destination folder
-        destinationFolder.AddFile(sourceFile.Value.name, sourceFile.Value.content);
+        destinationFolder.AddFile(sourceFile.name, sourceFile.content);
 
         // Remove the file from its original location
         if (!RemoveFileByPath(sourcePath, FileDirection.root))
         {
-            GameManager.AddInstruction("Failed to remove the file from the original location.");
-            return;
+            if (!RemoveFileByPath(sourcePath, GameManager.currFolder))
+            {
+                GameManager.AddInstruction("Failed to remove the file from the original location.");
+                return;
+            }
         }
 
         GameManager.AddInstruction($"Moved {sourcePath} to {destinationPath}");
@@ -248,22 +298,18 @@ public class LinuxCommands : MonoBehaviour
         string destinationPath = args[1];
 
         // Find the source file
-        File? sourceFile = FindFileByPath(sourcePath, FileDirection.root);
+        File sourceFile = FindFileByPath(sourcePath, GameManager.currFolder);
 
         if (sourceFile == null)
         {
             GameManager.AddInstruction("Source file not found.");
             return;
         }
-        if (sourcePath.Substring(sourcePath.Length - 8) == "1017.txt")
-        {
-            GameManager.NumberOf1017++;
-        }
 
         // Find the destination folder (should be an existing folder path)
         string[] destinationPathParts = destinationPath.Split('/');
         string destinationFolderPath = string.Join("/", destinationPathParts, 0, destinationPathParts.Length - 1);
-        Folder destinationFolder = FindFolder(FileDirection.root, destinationFolderPath);
+        Folder destinationFolder = FindFolder(GameManager.currFolder, destinationFolderPath);
 
         if (destinationFolder.name == null)
         {
@@ -272,9 +318,13 @@ public class LinuxCommands : MonoBehaviour
         }
 
         // Add a copy of the file to the destination folder
-        destinationFolder.AddFile(sourceFile.Value.name, sourceFile.Value.content);
+        destinationFolder.AddFile(sourceFile.name, sourceFile.content);
 
         GameManager.AddInstruction($"Copied {sourcePath} to {destinationPath}");
+        if (sourcePath.Length >= 8 && sourcePath.Substring(sourcePath.Length - 8) == "1017.txt" && destinationFolder.subFolders.Count>0)
+        {
+            GameManager.NumberOf1017++;
+        }
     }
     private void instrm(string inst)
     {
@@ -373,15 +423,28 @@ public class LinuxCommands : MonoBehaviour
         Debug.Log(inst);
         if (inst.Trim().Replace("\n", "").Replace("\r", "") == "Mycs400")
         {
-            if (StateMachine.State<=6)
+            if (StateMachine.State<4)
             {
                 GameManager.AddInstruction("Cheater! Go away!",2);
                 GameManager.AddInstruction("Farewell.",114.5f);
             }
+            else if (StateMachine.State<7)
+            {
+                GameManager.AddInstruction("So you inputted the right NetID..", 1f);
+                GameManager.AddInstruction("Should I submit your work?", 2f);
+                GameManager.AddInstruction("Definitely not.",1f);
+                GameManager.AddInstruction("Does that prevent you from submitting your homework over and over again?",2f);
+                GameManager.AddInstruction("No?",1);
+                GameManager.AddInstruction("You don't have a choice.", 2);
+                GameManager.AddInstruction("All you need to do is to <b><color=#B71013>stay with me.</color></b>", 1);
+                StateMachine.State++;
+                GameManager.LockInstruction[3] = false;
+                StateMachine.NextState = true;
+            }
             else
             {
-                //Need Redesign
-                GameManager.AddInstruction("Finally!");
+                GameManager.AddInstruction("This is not your ID......", 2f);
+                GameManager.AddInstruction("I know it.");
             }
         }
         else
@@ -410,7 +473,7 @@ public class LinuxCommands : MonoBehaviour
             }
         }
     }
-    private static File? FindFileByPath(string path, Folder currentFolder)
+    private static File FindFileByPath(string path, Folder currentFolder)
     {
         string[] pathParts = path.Split('/');
 

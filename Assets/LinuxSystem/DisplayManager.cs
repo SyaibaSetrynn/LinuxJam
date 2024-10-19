@@ -17,6 +17,9 @@ public class DisplayManager : MonoBehaviour
         inputfield.text = "";
         LengthDefault = inputfield.text;
         inputfield.caretPosition = inputfield.text.Length;
+        TMP_InputField inputField = GameObject.Find("InputField (TMP)").GetComponent<TMP_InputField>();
+        inputField.textComponent.enableWordWrapping = false;  // Disables word wrapping
+        inputField.textComponent.overflowMode = TextOverflowModes.Overflow;
     }
 
     public void EnterCommand()
@@ -26,7 +29,7 @@ public class DisplayManager : MonoBehaviour
         // Handle the case where there is no input
         if (CurrentText == "") inputfield.text += "\n";
 
-        GameManager.ExeInstruction(CurrentText);
+        GameManager.ExeInstruction(Regex.Replace(CurrentText,"\n",""));
         GameManager.Executing = true;
         // Disable interaction while processing
         inputfield.interactable = false;
@@ -77,8 +80,8 @@ public class DisplayManager : MonoBehaviour
         // While the visual line count exceeds the limit
         while (textInfo.lineCount > GameManager.LineLimit)
         {
-            Debug.Log(textInfo.lineCount + ">" + GameManager.LineLimit);
-            Debug.Log("Try to swallow");
+            //Debug.Log(textInfo.lineCount + ">" + GameManager.LineLimit);
+            //Debug.Log("Try to swallow");
 
             // Get the index of the first character of the first line
             int firstCharIndex = textInfo.lineInfo[0].firstCharacterIndex;
@@ -132,6 +135,7 @@ public class DisplayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(CurrentText);
         bool flag = true;
         if (Input.anyKeyDown)
         {
