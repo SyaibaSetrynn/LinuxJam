@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     public static int NetIDReqCount = 0;
     public static Folder NetIDFolder;
     public static int SmsAnger = 0;
+    public static string RightAnswer = "";
     //public static bool[] GameEvent = new bool[10];
     /*Listing all events down here:
      *0: Wrong input of name

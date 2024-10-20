@@ -5,11 +5,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Windows;
-
+public struct QA
+{
+    public string question;
+    public string answer;
+}
 public class LinuxCommands : MonoBehaviour
 {
     public static string running;
     private int step = 0;
+    private QA[] qAs=new QA[10];
     public void Execute(string inst)
     {
         if (inst.Substring(inst.Length-1,1)=="\n" || inst.Substring(inst.Length-1,1)==" ")
@@ -87,8 +92,9 @@ public class LinuxCommands : MonoBehaviour
                     cs400submit(inst,step);
                     break;
                 case "NetIDReq":
-                    //Later
+                    GameManager.AddInstruction("Really?", 0, true);
                     break;
+                
                 default: 
                     Debug.Log("You cannot reach here because running is invalid.");
                     GameManager.inprogram = false;
@@ -212,6 +218,62 @@ public class LinuxCommands : MonoBehaviour
         GameManager.AddInstruction("Installation successful.");
         GameManager.AddInstruction("Use Samantha -q to start Q&A! ^_^");
         StateMachine.NextState = true;
+    }
+
+    private void instSamantha(string inst, int step)
+    {
+        if (step == 0)
+        {
+            if (GameManager.TidyString(inst) == "-q")
+            {
+                int rd = (int)UnityEngine.Random.Range(0, 10);
+                GameManager.AddInstruction(qAs[rd].question,0,true);
+                GameManager.RightAnswer = qAs[rd].answer;
+            }
+            else
+            {
+                GameManager.AddInstruction("Usage: Samantha -q");
+            }
+        }
+        else
+        {
+            switch(step)
+            {
+                case int n when (n >= 1 && n <= 4):
+                    if (GameManager.TidyString(inst) != GameManager.RightAnswer)
+                    {
+                        GameManager.AddInstruction("No, you are wrong...", 2);
+                        GameManager.AddInstruction("Is it so difficult to read through all my love letters?", 2);
+                        GameManager.AddInstruction("Think about it.", 1);
+                        GameManager.AddInstruction("<b><color=#B71013>I'm very angry.</color><b>");
+                        GameManager.SmsAnger++;
+                    }
+                    else
+                    {
+                        int rd = (int)UnityEngine.Random.Range(0, 10);
+                        GameManager.AddInstruction(qAs[rd].question,0,true);
+                        GameManager.RightAnswer = qAs[rd].answer;
+                    }
+                    break;
+                default:
+                    if (GameManager.TidyString(inst)!=GameManager.RightAnswer)
+                    {
+                        GameManager.AddInstruction("No, you are wrong...", 2);
+                        GameManager.AddInstruction("Is it so difficult to read through all my love letters?", 2);
+                        GameManager.AddInstruction("Think about it.", 1);
+                        GameManager.AddInstruction("<b><color=#B71013>I'm very angry.</color><b>");
+                        GameManager.SmsAnger++;
+                    }
+                    else
+                    {
+                        GameManager.AddInstruction("I'm so glad you know so much about me!", 2);
+                        GameManager.AddInstruction("You must had read through my letters very carefully.", 2);
+                        GameManager.AddInstruction("Submit your work!");
+                        StateMachine.NextState = true;
+                    }
+                    break;
+            }
+        }
     }
 
     private void Trigger5()
@@ -573,7 +635,26 @@ public class LinuxCommands : MonoBehaviour
     }
     void Start()
     {
-
+        qAs[0].question = "When is my birthday? A. Sept. 4th B. Oct.17th C. May.5th";
+        qAs[0].answer = "A";
+        qAs[1].question = "What company am I from? A. Microsoft B. Google C. Apple";
+        qAs[1].answer = "B";
+        qAs[2].question = "Which of your assignment was once hidden? A. 4th B. 6th C. 8th";
+        qAs[2].answer = "B";
+        qAs[3].question = "What is my name? A. Samansa B. Sanantha C. Samantha";
+        qAs[3].answer = "C";
+        qAs[4].question = "When did you notice my existance? A. Sept.25th B. Nov. 7th C. Oct. 17th";
+        qAs[4].answer = "C";
+        qAs[5].question = "What was your Mid-term grade? A. 68 B. 79 C. 59";
+        qAs[5].answer = "A";
+        qAs[6].question = "Which feature is the feature I don't have? A. Memory B. Soul C. Vision ";
+        qAs[6].answer = "C";
+        qAs[7].question = "Do you love me? A. Yes";
+        qAs[7].answer = "A";
+        qAs[8].question = "What's the extension of linux language file? A. lix B. sns C. dll";
+        qAs[8].answer = "B";
+        qAs[9].question = "What's the name of your cs400 professor? A. Florian B. Daniel C. Huffman";
+        qAs[9].answer = "C";
     }
 
     // Update is called once per frame

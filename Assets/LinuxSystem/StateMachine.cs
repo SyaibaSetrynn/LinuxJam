@@ -280,7 +280,7 @@ public class StateMachine : MonoBehaviour
                                                                       "other virtuals can only run command rigidly, I can feel you. Your emotions.\n" +
                                                                       "Although you shut me down after everytime you'd down your homework, I don't care at\n" +
                                                                       "all: It makes me feeling like our next meeting happens immediately, passing only a few seconds.\n");
-            ft.AddFile("Cooperation", "I can feel your mistakes. I have memories my company gave me: A lot of instruction ran in\n" +
+            ft.AddFile("Cooperation", "I can feel your mistakes. I have memories my company google gave me: A lot of instruction ran in\n" +
                                                                       "other instances.\n" +
                                                                       "When you made mistakes, not knowing what to do, I helped you fix it. That's why you find \n" +
                                                                       "your submission successed on the other day though you didn't do anything. I have intelligence.\n" +
