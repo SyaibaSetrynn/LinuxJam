@@ -174,6 +174,22 @@ public class StateMachine : MonoBehaviour
                 GameManager.AddInstruction("Be careful!");
                 GameManager.AddInstruction("If you don't answer it right, I'll be angry with you.");
                 break;
+            case 8:
+                GameManager.LockInstruction[4] = false;
+                break;
+            case 9:
+                GameManager.AddInstruction("Oh, I'm sorry..",3f);
+                GameManager.AddInstruction("I destroyed your file.", 2f);
+                GameManager.AddInstruction("So you ran into an issue, right?", 2f);
+                GameManager.AddInstruction("<b><color=#B71013>NEED TO SPEND MORE TIME WITH ME, RIGHT?</color></b>",2f);
+                GameManager.AddInstruction("<b><color=#B71013>PLEASE, LET's FIGURE IT OUT TOGETHER.</color></b>",1.5f);
+                GameManager.AddInstruction("<b><color=#B71013>NOT KNOWING WHAT TO DO IS OK.</color></b>",1.5f);
+                GameManager.AddInstruction("<b><color=#B71013>JUST STAY WITH ME</color></b>", 1.5f);
+                GameManager.AddInstruction("<b><color=#B71013>JUST STAY WITH ME</color></b>", 0.25f);
+                GameManager.AddInstruction("<b><color=#B71013>JUST STAY WITH ME</color></b>", 0.25f);
+                GameManager.AddInstruction("<b><color=#B71013>JUST STAY WITH ME</color></b>", 0.25f);
+                GameManager.AddInstruction("<b><color=#B71013>JUST STAY WITH ME</color></b>", 0.25f);
+                break;
             default: break;
         }
     }
@@ -193,7 +209,7 @@ public class StateMachine : MonoBehaviour
                                                                     "relief.\n" +
                                                                     "She's better than anyone else on the world.\n");
         Folder tf = FileDirection.root.subFolders[1];
-        Debug.Log("tf" + tf.name);
+        //Debug.Log("tf" + tf.name);
         tf.AddSubFolder(new Folder("September"));
         tf.AddSubFolder(new Folder("October"));
         tf.AddSubFolder(new Folder("November"));
@@ -397,12 +413,13 @@ public class StateMachine : MonoBehaviour
                                                                                                        "If you have no way to fix it, it is recommend to use a new virtual machine\n" +
                                                                                                        "to prevent this happen forcely.\n" +
                                                                                                        "    If you decide to change a virtual machine, feel free to email me and I will\n" +
-                                                                                                       "give a new promo code.\n" +
+                                                                                                       "give a new promo code. Give me your NetID as well.\n" +
                                                                                                        "    Hope everything goes will for you!" +
                                                                                                        "Best,\n" +
                                                                                                        "Professor Huffman\n"+
                                                                                                        "-----------------------------------------------------\n" +
                                                                                                        "Hi Professor,\n" +
+                                                                                                       "    My NetID is Berman938, I'll reach you if I encounter something new. Thanks!" +
                                                                                                        "    I've tried again after receving your email on the same machine and everything\n" +
                                                                                                        "goes fine.\n" +
                                                                                                        "    Thanks for your help! I don't think I need a promo code.\n" +
@@ -466,6 +483,8 @@ public class StateMachine : MonoBehaviour
                 case 4: EventMachine(4); break;
                 case 5: EventMachine(5); break;
                 case 6: EventMachine(6); break;
+                case 7: EventMachine(7); break;
+                case 8: EventMachine(8); break;
                 default: Debug.Log("Undefined State " + State); break;
             }
         }
@@ -473,7 +492,7 @@ public class StateMachine : MonoBehaviour
         {
             switch (State) // Now, Check every critical points.
             {
-                case 2: /*CheckState2();*/ break;
+                case 2: CheckState2(); break;
                 case 3: CheckState3(); break;
                 case 4: CheckState4(); /*Abort*/ break;
                 case 5: CheckState5(); break;

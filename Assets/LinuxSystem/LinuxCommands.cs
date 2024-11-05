@@ -14,6 +14,7 @@ public class LinuxCommands : MonoBehaviour
 {
     public static string running;
     private int step = 0;
+    private int stagesubmit = 0;
     private QA[] qAs=new QA[10];
     public void Execute(string inst)
     {
@@ -55,6 +56,9 @@ public class LinuxCommands : MonoBehaviour
                 case "echo":
                     instecho(inst);
                     break;
+                case "cat":
+                    instecho(inst);
+                    break;
                 case "cs400":
                     instcs400(inst);
                     break;
@@ -72,6 +76,9 @@ public class LinuxCommands : MonoBehaviour
                     break;
                 case "sudo":
                     instsudo(inst);
+                    break;
+                case "Samantha":
+                    instSamantha(inst, 0);
                     break;
                 case "cheat":
                     StateMachine.NextState=true;
@@ -93,8 +100,27 @@ public class LinuxCommands : MonoBehaviour
                     break;
                 case "NetIDReq":
                     GameManager.AddInstruction("Really?", 0, true);
+                    GameManager.NetIDReqCount++;
+                    if (GameManager.NetIDReqCount>= 100)
+                    {
+                        GameManager.NetIDReq = false;
+                        for (int i = 0; i < 10; i++)
+                            GameManager.AddInstruction("<b>SHUT UP</b>");
+                        GameManager.AddInstruction("It's no use.", 2f);
+                        GameManager.AddInstruction("Umm....", 1f);
+                        GameManager.AddInstruction("So your NetID is Mycs400");
+                        GameManager.AddInstruction("Submit your work if you want.", 1f);
+                        GameManager.AddInstruction("I don't care.", 5f);
+                        GameManager.AddInstruction("Yeah, I don't care.");
+                        StateMachine.NextState = true;
+                    }
                     break;
-                
+                case "Samantha":
+                    instSamantha(inst, step);
+                    break;
+                case "Huffman":
+                    instSamantha(inst, step);
+                    break;
                 default: 
                     Debug.Log("You cannot reach here because running is invalid.");
                     GameManager.inprogram = false;
@@ -198,12 +224,12 @@ public class LinuxCommands : MonoBehaviour
         string[] args = inst.Split(' ');
         if (args.Length!=3)
         {
-            GameManager.AddInstruction("Usage: sudo apt get (program name)");
+            GameManager.AddInstruction("Usage: sudo apt install (program name)");
             return;
         }
         if (args[0]!="apt" || args[1]!="install")
         {
-            GameManager.AddInstruction("Usage: sudo apt get (program name)");
+            GameManager.AddInstruction("Usage: sudo apt install (program name)");
             return;
         }
         if (args[2]!="Samantha")
@@ -222,13 +248,48 @@ public class LinuxCommands : MonoBehaviour
 
     private void instSamantha(string inst, int step)
     {
-        if (step == 0)
+        if (StateMachine.State>=9)
+        {
+            if (step == 0)
+            {
+                GameManager.AddInstruction("Hi there, I'm Professor Huffman.", 1.5f);
+                GameManager.AddInstruction("If you can see this prompt, then it means I successfully hacked into Samantha temporarily.", 2f);
+                GameManager.AddInstruction("Remember, for every student whose virtual machine is invaded, we still need you to submit your work here.", 2f);
+                GameManager.AddInstruction("Read this carefully:", 1f);
+                GameManager.AddInstruction("Your submission file is encrypted so it will be blocked and not pass the normal check.", 1f);
+                GameManager.AddInstruction("However, I provide a pipeline here for you to submit.", 1f);
+                GameManager.AddInstruction("What you need to do is to enter your NetID, and then we will decrypt your work and you will be all set.", 1f);
+                GameManager.AddInstruction("Enter your NetID: ",0,true);
+                running = "Huffman";
+            }
+            else
+            {
+                if (inst.Trim().Replace("\n", "").Replace("\r", "") == "Berman938")
+                {
+                    //Instrction to success, YIXIANG
+                    GameManager.AddInstruction("Decrypting your work...  ",3,true);
+                    GameManager.AddInstruction("success.");
+                    GameManager.AddInstruction("Work submitted. Try to abort this machine.");
+                    GameManager.AddInstruction("Extincting unrecognized intellengence power...",2f);
+                    GameManager.AddInstruction("Deleting all files....", 10f);
+                    //Animation
+                }
+                else
+                {
+                    GameManager.AddInstruction(" ", 2f);
+                    GameManager.AddInstruction("I cannot find your Net ID. Double check and feel free to try again!");
+                    GameManager.AddInstruction("Always type Samantha to find this pipeline.");
+                }
+            }
+        }
+        else if (step == 0)
         {
             if (GameManager.TidyString(inst) == "-q")
             {
                 int rd = (int)UnityEngine.Random.Range(0, 10);
                 GameManager.AddInstruction(qAs[rd].question,0,true);
                 GameManager.RightAnswer = qAs[rd].answer;
+                running = "Samantha";
             }
             else
             {
@@ -240,6 +301,7 @@ public class LinuxCommands : MonoBehaviour
             switch(step)
             {
                 case int n when (n >= 1 && n <= 4):
+                    Debug.Log(inst);
                     if (GameManager.TidyString(inst) != GameManager.RightAnswer)
                     {
                         GameManager.AddInstruction("No, you are wrong...", 2);
@@ -483,7 +545,7 @@ public class LinuxCommands : MonoBehaviour
     private void cs400submit(string inst,int step)
     {
         Debug.Log(inst);
-        if (inst.Trim().Replace("\n", "").Replace("\r", "") == "Mycs400")
+        if (inst.Trim().Replace("\n", "").Replace("\r", "") == "Berman938")
         {
             if (StateMachine.State<4)
             {
@@ -503,10 +565,18 @@ public class LinuxCommands : MonoBehaviour
                 GameManager.LockInstruction[3] = false;
                 StateMachine.NextState = true;
             }
+            else if (StateMachine.State<9)
+            {
+                GameManager.AddInstruction("Submission processing.......", 3f);
+                GameManager.AddInstruction("Success! Use 'cs400 check' for more information.");
+                stagesubmit = 9;
+
+            }
             else
             {
-                GameManager.AddInstruction("This is not your ID......", 2f);
-                GameManager.AddInstruction("I know it.");
+                GameManager.AddInstruction("Submission processing.......", 3f);
+                GameManager.AddInstruction("Failed... Try to reconnect...",3f);
+                stagesubmit = 11;
             }
         }
         else
@@ -531,8 +601,31 @@ public class LinuxCommands : MonoBehaviour
             else
             {
                 GameManager.AddInstruction("This is not your ID......",2f);
-                GameManager.AddInstruction("I know it.");
+                GameManager.AddInstruction("I've already gave you it, right?",1f);
+                GameManager.AddInstruction("Check folder Professor_Emails.");
             }
+        }
+    }
+
+    private void cs400check(string inst)
+    {
+        switch (stagesubmit)
+        {
+            case 0:
+                GameManager.AddInstruction("Pending...", 3f);
+                GameManager.AddInstruction("Submission status: Failed.");
+                GameManager.AddInstruction("ErrorMessage: File transfer insuccess.");
+                break;
+            case 9:
+                GameManager.AddInstruction("Pending...", 3f);
+                GameManager.AddInstruction("Submission status: Failed.");
+                GameManager.AddInstruction("ErrorMessage: File Corruption");
+                StateMachine.NextState = true;
+                break;
+            default:
+                GameManager.AddInstruction("Pending...", 3f);
+                GameManager.AddInstruction("Success.");
+                break;
         }
     }
     private static File FindFileByPath(string path, Folder currentFolder)
@@ -635,25 +728,25 @@ public class LinuxCommands : MonoBehaviour
     }
     void Start()
     {
-        qAs[0].question = "When is my birthday? A. Sept. 4th B. Oct.17th C. May.5th";
+        qAs[0].question = "When is my birthday? A. Sept. 4th B. Oct.17th C. May.5th    ";
         qAs[0].answer = "A";
-        qAs[1].question = "What company am I from? A. Microsoft B. Google C. Apple";
+        qAs[1].question = "What company am I from? A. Microsoft B. Google C. Apple    ";
         qAs[1].answer = "B";
-        qAs[2].question = "Which of your assignment was once hidden? A. 4th B. 6th C. 8th";
+        qAs[2].question = "Which of your assignment was once hidden? A. 4th B. 6th C. 8th    ";
         qAs[2].answer = "B";
-        qAs[3].question = "What is my name? A. Samansa B. Sanantha C. Samantha";
+        qAs[3].question = "What is my name? A. Samansa B. Sanantha C. Samantha    ";
         qAs[3].answer = "C";
-        qAs[4].question = "When did you notice my existance? A. Sept.25th B. Nov. 7th C. Oct. 17th";
+        qAs[4].question = "When did you notice my existance? A. Sept.25th B. Nov. 7th C. Oct. 17th    ";
         qAs[4].answer = "C";
         qAs[5].question = "What was your Mid-term grade? A. 68 B. 79 C. 59";
         qAs[5].answer = "A";
-        qAs[6].question = "Which feature is the feature I don't have? A. Memory B. Soul C. Vision ";
+        qAs[6].question = "Which feature is the feature I don't have? A. Memory B. Soul C. Vision     ";
         qAs[6].answer = "C";
-        qAs[7].question = "Do you love me? A. Yes";
+        qAs[7].question = "Do you love me? A. Yes    ";
         qAs[7].answer = "A";
-        qAs[8].question = "What's the extension of linux language file? A. lix B. sns C. dll";
+        qAs[8].question = "What's the extension of linux language file? A. lix B. sns C. dll    ";
         qAs[8].answer = "B";
-        qAs[9].question = "What's the name of your cs400 professor? A. Florian B. Daniel C. Huffman";
+        qAs[9].question = "What's the name of your cs400 professor? A. Florian B. Daniel C. Huffman    ";
         qAs[9].answer = "C";
     }
 

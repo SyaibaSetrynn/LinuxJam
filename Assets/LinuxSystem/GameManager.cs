@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     public static bool inprogram;
     public static int NumberOf1017;
     private static bool Failed = false;
+    public static bool Success = false;
     public static bool madeSMS = false, NetIDReq=false ,ReqGiveUp=false;
     public static int NetIDReqCount = 0;
     public static Folder NetIDFolder;
@@ -124,6 +125,10 @@ public class GameManager : MonoBehaviour
         if (CurrCoolDown==0 && instructions.Count==0 && Failed)
         {
             SceneManager.LoadScene("Failed");
+        }
+        if (CurrCoolDown == 0 && instructions.Count == 0 && Success)
+        {
+            SceneManager.LoadScene("Success");
         }
         if ((NumberOf1017<1) && (!Failed))
         {

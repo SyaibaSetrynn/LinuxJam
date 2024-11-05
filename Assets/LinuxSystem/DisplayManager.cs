@@ -64,6 +64,29 @@ public class DisplayManager : MonoBehaviour
         {
             SwallowLine();
         }
+        FixWordHelper();
+    }
+    private void FixWordHelper()
+    {
+        TMP_TextInfo textInfo = inputfield.textComponent.textInfo;
+        // Iterate over each line in the text info
+        for (int i = 0; i < textInfo.lineCount; i++)
+        {
+            TMP_LineInfo lineInfo = textInfo.lineInfo[i];
+
+            // Check if the length of the line exceeds the GameManager's line limit
+            if (lineInfo.characterCount > 110)
+            {
+                // Get the index of the character at the LineLimit position
+                int limitCharIndex = lineInfo.firstCharacterIndex + 110 - 1;
+
+                // Insert a newline character at the appropriate place in the inputfield's text
+                Debug.Log("Activated. "+CurrentText.Length);
+                inputfield.text = inputfield.text.Insert(limitCharIndex, "\n");
+                inputfield.caretPosition++;
+                inputfield.textComponent.ForceMeshUpdate();
+            }
+        }
     }
 
     public void CheckParet()
