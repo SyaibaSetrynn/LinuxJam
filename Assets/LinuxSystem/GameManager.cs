@@ -33,6 +33,11 @@ public class GameManager : MonoBehaviour
     public static Folder NetIDFolder;
     public static int SmsAnger = 0;
     public static string RightAnswer = "";
+    public Animator mask, guitou;
+    public static bool AddAnger = false;
+    public static bool EndGame = false;
+    private static float CoolDownBeforeEnd = 5;
+    private static bool TS7 = false;
     //public static bool[] GameEvent = new bool[10];
     /*Listing all events down here:
      *0: Wrong input of name
@@ -204,9 +209,33 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
     // Update is called once per frame
     void Update()
     {
+        if (AddAnger)
+        {
+            AddAnger = false;
+            mask.SetInteger("Anger", SmsAnger);
+        }
+        if (StateMachine.State>=7 && !TS7)
+        {
+            mask.SetTrigger("State7");
+            TS7 = true;
+        }
+        if (EndGame)
+        {
+            if (CoolDownBeforeEnd>0)
+            {
+                CoolDownBeforeEnd -= Time.deltaTime;
+            }
+            else
+            {
+                mask.SetTrigger("FinalState");
+                guitou.SetTrigger("GameEnd");
+                EndGame = false;
+            }
+        }
         CheckFail();
         CheckT5();
         if (CurrCoolDown == 0)

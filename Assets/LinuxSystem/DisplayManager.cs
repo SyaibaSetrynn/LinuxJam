@@ -50,40 +50,73 @@ public class DisplayManager : MonoBehaviour
     {
         if (LengthDefault.Length>inputfield.text.Length)
         {
+            //Debug.Log("1Activated");
             inputfield.text = LengthDefault;
         }
         else if (!inputfield.text.StartsWith(LengthDefault))
         {
+            //Debug.Log("2Activated");
             inputfield.text = LengthDefault + CurrentText;
         }
         else
         {
-            CurrentText=inputfield.text.Substring(LengthDefault.Length);
+            //Debug.Log("3Activated");
+            CurrentText =inputfield.text.Substring(LengthDefault.Length);
         }
         if (inputfield.textComponent.textInfo.lineCount > GameManager.LineLimit)
         {
+            Debug.Log("4Activated");
             SwallowLine();
         }
         FixWordHelper();
     }
+    private string StripRichTextTags(string input)
+    {
+        return Regex.Replace(input, "<.*?>", string.Empty);
+    }
     private void FixWordHelper()
     {
         TMP_TextInfo textInfo = inputfield.textComponent.textInfo;
-        // Iterate over each line in the text info
+
+        // Create a copy of the input field text without rich text tags
+        string strippedText = StripRichTextTags(inputfield.text);
+        int strippedIndexOffset = 0; // Tracks offset between original and stripped text
+
         for (int i = 0; i < textInfo.lineCount; i++)
         {
             TMP_LineInfo lineInfo = textInfo.lineInfo[i];
 
-            // Check if the length of the line exceeds the GameManager's line limit
-            if (lineInfo.characterCount > 110)
+            // Check if the length of the line in the stripped text exceeds the limit
+            if (lineInfo.characterCount > 108)
             {
-                // Get the index of the character at the LineLimit position
-                int limitCharIndex = lineInfo.firstCharacterIndex + 110 - 1;
+                // Calculate the position to insert the newline in the stripped text
+                int limitCharIndex = lineInfo.firstCharacterIndex + 108 - 1;
 
-                // Insert a newline character at the appropriate place in the inputfield's text
-                Debug.Log("Activated. "+CurrentText.Length);
-                inputfield.text = inputfield.text.Insert(limitCharIndex, "\n");
-                inputfield.caretPosition++;
+                // Find the corresponding index in the original text
+                for (int j = 0, k = 0; j < inputfield.text.Length && k < strippedText.Length; j++)
+                {
+                    if (inputfield.text[j] == strippedText[k])
+                    {
+                        k++;
+                        if (k == limitCharIndex + 1)
+                        {
+                            // Insert a newline in the original text at the matching index
+                            inputfield.text = inputfield.text.Insert(j + 1, "\r\n");
+                            if (inputfield.text.Contains(LengthDefault))
+                            {
+                                CurrentText = inputfield.text.Substring(LengthDefault.Length);
+                            }
+                            else
+                            {
+                                LengthDefault = inputfield.text.Substring(0, LengthDefault.Length + 2);
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // Update the text component
+                inputfield.caretPosition+=2;
                 inputfield.textComponent.ForceMeshUpdate();
             }
         }
@@ -165,6 +198,9 @@ public class DisplayManager : MonoBehaviour
             //Debug.Log(LengthDefault.Length+">"+inputfield.text.Length);
             CheckParet();
             flag = false;
+            //inputfield.Select();
+            //inputfield.ActivateInputField();
+            //Debug.Log(inputfield.caretPosition);
         }
         if (inputfield.interactable == GameManager.Executing)
         {

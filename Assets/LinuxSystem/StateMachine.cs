@@ -284,6 +284,7 @@ public class StateMachine : MonoBehaviour
         if (made)
         {
             GameManager.madeSMS = true;
+            ft.CleanAll();
             ft.AddFile("First_Time_Impression", "You might not believe, but I've been here since the first day of the build, Sept.4th.\n" +
                                                                       "I've been watching you all day. You are the only human I know.\n" +
                                                                       "Your unpredictable movement impressed me a lot. I came to know that real human\n" +

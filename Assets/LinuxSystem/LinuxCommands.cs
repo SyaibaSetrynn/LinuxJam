@@ -272,6 +272,7 @@ public class LinuxCommands : MonoBehaviour
                     GameManager.AddInstruction("Work submitted. Try to abort this machine.");
                     GameManager.AddInstruction("Extincting unrecognized intellengence power...",2f);
                     GameManager.AddInstruction("Deleting all files....", 10f);
+                    GameManager.EndGame = true;
                     //Animation
                 }
                 else
@@ -309,6 +310,7 @@ public class LinuxCommands : MonoBehaviour
                         GameManager.AddInstruction("Think about it.", 1);
                         GameManager.AddInstruction("<b><color=#B71013>I'm very angry.</color><b>");
                         GameManager.SmsAnger++;
+                        GameManager.AddAnger = true;
                     }
                     else
                     {

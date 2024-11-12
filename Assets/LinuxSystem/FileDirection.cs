@@ -41,6 +41,12 @@ public class Folder
     {
         files.Add(new File(name, content));
     }
+
+    public void CleanAll()
+    {
+        this.subFolders = new List<Folder>();
+        this.files = new List<File>();
+    }
 }
 
 public class FileDirection : MonoBehaviour
@@ -72,7 +78,7 @@ public class FileDirection : MonoBehaviour
 
         foreach (var file in currentFolder.files)
         {
-            output += file.name + "    ";  // Show files
+            output += file.name + "      ";  // Show files
         }
 
         // Output result to GameManager
@@ -180,6 +186,7 @@ public class FileDirection : MonoBehaviour
 
         return new Folder(); // Return an empty folder if not found
     }
+
     void Awake()
     {
         root.AddFile("instruction.txt", "This is the instruction");
