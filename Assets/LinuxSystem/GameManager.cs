@@ -183,14 +183,25 @@ public class GameManager : MonoBehaviour
             {
                 switch(NetIDReqCount)
                 {
-                    case < 10: AddInstruction("Really?", 0, true); break;
+                    case < 10: AddInstruction("Really?", 0, true);
+                        inputField.caretPosition = inputField.text.Length;
+                        break;
+                    case 10:
+                        AddInstruction("Really?\n", 0, true);
+                        inputField.caretPosition = inputField.text.Length;
+                        break;
                     //case % 10 == 0: AddInstruction("Really?\n", 0, true); break;
-                    default: 
-                        if (NetIDReqCount % 10==0)
+                    default:
+                        if (NetIDReqCount % 10 == 0)
                         {
-                            AddInstruction("Really?\n", 0, true);
+                            AddInstruction("<b><color=#AB601E>Really?\r\n</color></b>", 0, true);
+                            inputField.caretPosition = inputField.text.Length;
                         }
-                        AddInstruction("<b><color=#AB601E>Really?</color></b>", 0, true); 
+                        else
+                        {
+                            AddInstruction("<b><color=#AB601E>Really?</color></b>", 0, true);
+                            inputField.caretPosition = inputField.text.Length;
+                        }
                         break;
                 }
                 NetIDReqCount++;
@@ -234,6 +245,7 @@ public class GameManager : MonoBehaviour
             {
                 mask.SetTrigger("FinalState");
                 guitou.SetTrigger("GameEnd");
+                SceneManager.LoadScene("Success");
                 EndGame = false;
             }
         }
@@ -248,6 +260,8 @@ public class GameManager : MonoBehaviour
                     if (!inprogram)
                     {
                         inputField.text += GameManager.DefaultInstruction;
+                    
+                        inputField.textComponent.ForceMeshUpdate();
                         displayManager.MaintainLength();
                         displayManager.Debuglog();
                         //Debug.Log("Outside program");

@@ -121,7 +121,16 @@ public class FileDirection : MonoBehaviour
         // Update current folder and construct the full path for prompt display
         GameManager.currFolder = targetFolder;
         string fullPath = GetFullPath(GameManager.currFolder);
-        GameManager.DefaultInstruction = $"<color=#6BF263>User@MyDearestLinux:~/{fullPath}$ </color>";
+        fullPath = "User@MyDearestLinux:~/" + fullPath + "$ ";
+        int maxLineLength = 108;
+        Debug.Log(fullPath);
+        for (int i = maxLineLength; i < fullPath.Length; i += maxLineLength)
+        {
+            fullPath = fullPath.Insert(i, "\r\n");
+            Debug.Log("Plugged in");
+            i += 2; // Account for the inserted line break characters
+        }
+        GameManager.DefaultInstruction = $"<color=#6BF263>{fullPath}</color>";
     }
 
     // Helper function to construct the full path of the current folder

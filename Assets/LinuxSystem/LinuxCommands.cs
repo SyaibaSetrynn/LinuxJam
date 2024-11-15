@@ -529,7 +529,7 @@ public class LinuxCommands : MonoBehaviour
                 GameManager.inprogram = false;
                 break;
             case "check":
-                //Some checks. Need further design
+                cs400check(inst);
                 GameManager.inprogram = false;
                 break;
             case "init": break;

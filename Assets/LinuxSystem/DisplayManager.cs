@@ -66,10 +66,10 @@ public class DisplayManager : MonoBehaviour
         }
         if (inputfield.textComponent.textInfo.lineCount > GameManager.LineLimit)
         {
-            Debug.Log("4Activated");
+            //Debug.Log("4Activated");
             SwallowLine();
         }
-        if (!inputfield.interactable)
+        if (GameManager.WrapLine)
         {
             FixWordHelper();
             GameManager.WrapLine = false;
@@ -111,21 +111,13 @@ public class DisplayManager : MonoBehaviour
                             splitOccurred = true; // Mark that a split occurred
                             inputfield.textComponent.ForceMeshUpdate();
                             textInfo = inputfield.textComponent.textInfo;
-                            for (int l = 0; l < textInfo.lineCount; l++)
-                            {
-                                TMP_LineInfo lineInfo2 = textInfo.lineInfo[l];
-                                if (lineInfo2.characterCount > 108)
-                                    Debug.Log("This line still bigger than 108: " + lineInfo2.ToString());
-                            }
                             if (inputfield.text.Contains(LengthDefault))
                             {
                                 CurrentText = inputfield.text.Substring(LengthDefault.Length);
-                                Debug.Log("CurrentText=" + CurrentText);
                             }
                             else
                             {
                                 LengthDefault = inputfield.text.Substring(0, LengthDefault.Length + 2);
-                                Debug.Log("Not Containing CurrText and FOrce update");
                             }
                             break;
                         }
