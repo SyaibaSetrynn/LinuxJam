@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     public static bool EndGame = false;
     private static float CoolDownBeforeEnd = 5;
     private static bool TS7 = false;
+    public static bool WrapLine = false;
     //public static bool[] GameEvent = new bool[10];
     /*Listing all events down here:
      *0: Wrong input of name

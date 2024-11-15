@@ -31,6 +31,7 @@ public class DisplayManager : MonoBehaviour
 
         GameManager.ExeInstruction(Regex.Replace(CurrentText,"\n",""));
         GameManager.Executing = true;
+        GameManager.WrapLine = true;
         // Disable interaction while processing
         inputfield.interactable = false;
 
@@ -68,7 +69,11 @@ public class DisplayManager : MonoBehaviour
             Debug.Log("4Activated");
             SwallowLine();
         }
-        FixWordHelper();
+        if (!inputfield.interactable)
+        {
+            FixWordHelper();
+            GameManager.WrapLine = false;
+        }
     }
     private string StripRichTextTags(string input)
     {
@@ -81,13 +86,14 @@ public class DisplayManager : MonoBehaviour
         // Create a copy of the input field text without rich text tags
         string strippedText = StripRichTextTags(inputfield.text);
         int strippedIndexOffset = 0; // Tracks offset between original and stripped text
+        bool splitOccurred = false; // Tracks if a split has occurred for any line
 
         for (int i = 0; i < textInfo.lineCount; i++)
         {
             TMP_LineInfo lineInfo = textInfo.lineInfo[i];
 
             // Check if the length of the line in the stripped text exceeds the limit
-            if (lineInfo.characterCount > 108)
+            if (lineInfo.characterCount > 110 && !splitOccurred)
             {
                 // Calculate the position to insert the newline in the stripped text
                 int limitCharIndex = lineInfo.firstCharacterIndex + 108 - 1;
@@ -102,13 +108,24 @@ public class DisplayManager : MonoBehaviour
                         {
                             // Insert a newline in the original text at the matching index
                             inputfield.text = inputfield.text.Insert(j + 1, "\r\n");
+                            splitOccurred = true; // Mark that a split occurred
+                            inputfield.textComponent.ForceMeshUpdate();
+                            textInfo = inputfield.textComponent.textInfo;
+                            for (int l = 0; l < textInfo.lineCount; l++)
+                            {
+                                TMP_LineInfo lineInfo2 = textInfo.lineInfo[l];
+                                if (lineInfo2.characterCount > 108)
+                                    Debug.Log("This line still bigger than 108: " + lineInfo2.ToString());
+                            }
                             if (inputfield.text.Contains(LengthDefault))
                             {
                                 CurrentText = inputfield.text.Substring(LengthDefault.Length);
+                                Debug.Log("CurrentText=" + CurrentText);
                             }
                             else
                             {
                                 LengthDefault = inputfield.text.Substring(0, LengthDefault.Length + 2);
+                                Debug.Log("Not Containing CurrText and FOrce update");
                             }
                             break;
                         }
@@ -116,8 +133,9 @@ public class DisplayManager : MonoBehaviour
                 }
 
                 // Update the text component
-                inputfield.caretPosition+=2;
+                inputfield.caretPosition += 2;
                 inputfield.textComponent.ForceMeshUpdate();
+                textInfo = inputfield.textComponent.textInfo; // Refresh textInfo after change
             }
         }
     }
