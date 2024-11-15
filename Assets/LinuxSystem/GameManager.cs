@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
             lines l = new lines();
             cont = Regex.Replace(cont, "¥n", "");
             l.Content = cont;
-            l.Cooldown = Cool/1000;// 1000
+            l.Cooldown = Cool;// 1000
             l.inProgram = true;
             inprogram = true;
             //Debug.Log(l.Content);
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
             {
                 cont = Regex.Replace(cont, "¥n", "");
                 l.Content = cont + "\n";
-                l.Cooldown = Cool/1000; //1000
+                l.Cooldown = Cool; //1000
                 instructions.Enqueue(l);
             }
         }
@@ -153,6 +153,7 @@ public class GameManager : MonoBehaviour
         }
         if (SmsAnger>=3 && (!Failed))
         {
+            guitou.SetTrigger("GameLose");
             AddInstruction("Wait.",2);
             AddInstruction("Do you answer the question just for the purpose of beating the game?", 2);
             AddInstruction("I'm so disappointed.", 2);
@@ -240,12 +241,15 @@ public class GameManager : MonoBehaviour
             if (CoolDownBeforeEnd>0)
             {
                 CoolDownBeforeEnd -= Time.deltaTime;
+                if (CoolDownBeforeEnd <= 0)
+                {
+                    SceneManager.LoadScene("Success");
+                }
             }
             else
             {
                 mask.SetTrigger("FinalState");
                 guitou.SetTrigger("GameEnd");
-                SceneManager.LoadScene("Success");
                 EndGame = false;
             }
         }

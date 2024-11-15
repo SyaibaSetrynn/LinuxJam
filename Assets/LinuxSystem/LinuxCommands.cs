@@ -81,7 +81,7 @@ public class LinuxCommands : MonoBehaviour
                     instSamantha(inst, 0);
                     break;
                 case "cheat":
-                    StateMachine.NextState=true;
+                    instcheat(inst);
                     break;
                 default:
                     GameManager.AddInstruction("Command not found");
@@ -144,6 +144,11 @@ public class LinuxCommands : MonoBehaviour
             // Otherwise, change to the specified directory
             FileDirection.ChangeDirectory(inst);
         }
+    }
+
+    private void instcheat(string inst)
+    {
+        StateMachine.NextState = true;
     }
 
     private void instls(string inst)
@@ -303,7 +308,7 @@ public class LinuxCommands : MonoBehaviour
             {
                 case int n when (n >= 1 && n <= 4):
                     Debug.Log(inst);
-                    if (GameManager.TidyString(inst) != GameManager.RightAnswer)
+                    if (GameManager.TidyString(inst).ToUpper() != GameManager.RightAnswer)
                     {
                         GameManager.AddInstruction("No, you are wrong...", 2);
                         GameManager.AddInstruction("Is it so difficult to read through all my love letters?", 2);
