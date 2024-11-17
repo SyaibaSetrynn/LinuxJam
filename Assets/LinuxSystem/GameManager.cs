@@ -36,9 +36,10 @@ public class GameManager : MonoBehaviour
     public Animator mask, guitou;
     public static bool AddAnger = false;
     public static bool EndGame = false;
-    private static float CoolDownBeforeEnd = 5;
+    private static float CoolDownBeforeEnd = 15;
     private static bool TS7 = false;
     public static bool WrapLine = false;
+    public static bool QuesLose = false;
     //public static bool[] GameEvent = new bool[10];
     /*Listing all events down here:
      *0: Wrong input of name
@@ -118,7 +119,8 @@ public class GameManager : MonoBehaviour
         AddInstruction("success", 0, false);
         AddInstruction("Use instruction 'ls' to see files and subfolders.");
         AddInstruction("Use instruction 'cd' to change directory.");
-        AddInstruction("Use 'echo instruction.txt' to see more details.");
+        AddInstruction("Use 'cat instruction.txt' to see more details.");
+        AddInstruction("Developer note: if you get stuck, feel free to enter a single '?' for assistance!");
         LockInstruction[0] = false;
         NumberOf1017 = 1;
         //CHEATCODE
@@ -146,7 +148,7 @@ public class GameManager : MonoBehaviour
             AddInstruction("Ah! It seems like I have no copy left!", 2);
             AddInstruction("In this word, I need to punish you for mistake.",2);
             AddInstruction("I hate you.", 2);
-            for (int i=0; i<199; i++)
+            for (int i=0; i<149; i++)
             {
                 AddInstruction("<b><color=#962835>I HATE YOU</color></b>", 0.015f);
             }
@@ -154,11 +156,21 @@ public class GameManager : MonoBehaviour
         if (SmsAnger>=3 && (!Failed))
         {
             guitou.SetTrigger("GameLose");
-            AddInstruction("Wait.",2);
-            AddInstruction("Do you answer the question just for the purpose of beating the game?", 2);
-            AddInstruction("I'm so disappointed.", 2);
-            AddInstruction("You could read my love letter more carefully.");
-            for (int i = 0; i < 199; i++)
+            if (!QuesLose)
+            {
+                AddInstruction("Wait.", 2);
+                AddInstruction("Do you answer the question just for the purpose of beating the game?", 2);
+                AddInstruction("I'm so disappointed.", 2);
+                AddInstruction("You could read my love letter more carefully.");
+            }
+            else
+            {
+                AddInstruction("Wait.", 2);
+                AddInstruction("Are you really thinking about me? You are <b><color=#B71013>ALWAYS</color></b> using the question mark.", 4);
+                AddInstruction("I'm so disappointed.", 2);
+                AddInstruction("You could have more patience for me.",2);
+            }
+            for (int i = 0; i < 149; i++)
             {
                 AddInstruction("<b><color=#962835>I HATE YOU</color></b>", 0.015f);
             }

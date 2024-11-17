@@ -37,7 +37,8 @@ public class StateMachine : MonoBehaviour
                 FileDirection.root.files[index] = new File("instruction.txt", "Welcome to the game!\n\n" +
                                                                                         "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
-                                                                                        "Current Mission: Submit cs400 work\n\n\n" +
+                                                                                        "Current Mission: Submit cs400 work\n" +
+                                                                                        "Please use 'cs400 submit' in the submission folder\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
                                                                                         "Ex: cd subfolder/subfolder2 Redirects you to the subfolder2 of the subfolder in this directory.\n" +
                                                                                         "Use cd alone to return root direction\n\n" +
@@ -62,7 +63,7 @@ public class StateMachine : MonoBehaviour
             case 3:
                 FileDirection.root.files[index] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
-                                                                                        "Current Mission: Use 'make' to decrypt the files and read them.\n\n\n" +
+                                                                                        "Current Mission: Use 'make' to decrypt the files in Project_Samantha and read them.\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
                                                                                         "Ex: cd subfolder/subfolder2 Redirects you to the subfolder2 of the subfolder in this directory.\n" +
                                                                                         "Use cd alone to return root direction\n\n" +
@@ -98,7 +99,8 @@ public class StateMachine : MonoBehaviour
             case 6:
                 FileDirection.root.files[index] = new File("instruction.txt", "The goal of the game is to submit your final homework successfully.\n" +
                                                                                         "Follow the instructions and complete the missions.\n\n" +
-                                                                                        "Current Mission: Submit your cs400 coursework\n\n\n" +
+                                                                                        "Current Mission: Submit your cs400 coursework\n" +
+                                                                                        "Please use 'cs400 submit' in the submission folder\n\n\n" +
                                                                                         "cd: Change direction to any subfolders.\n" +
                                                                                         "Ex: cd subfolder/subfolder2 Redirects you to the subfolder2 of the subfolder in this directory.\n" +
                                                                                         "Use cd alone to return root direction\n\n" +
@@ -420,7 +422,7 @@ public class StateMachine : MonoBehaviour
                                                                                                        "Professor Huffman\n"+
                                                                                                        "-----------------------------------------------------\n" +
                                                                                                        "Hi Professor,\n" +
-                                                                                                       "    My NetID is Berman938, I'll reach you if I encounter something new. Thanks!" +
+                                                                                                       "    My NetID is Berman938. I'll reach you if I encounter something new. Thanks!" +
                                                                                                        "    I've tried again after receving your email on the same machine and everything\n" +
                                                                                                        "goes fine.\n" +
                                                                                                        "    Thanks for your help! I don't think I need a promo code.\n" +
@@ -486,6 +488,7 @@ public class StateMachine : MonoBehaviour
                 case 6: EventMachine(6); break;
                 case 7: EventMachine(7); break;
                 case 8: EventMachine(8); break;
+                case 9: EventMachine(9); break;
                 default: Debug.Log("Undefined State " + State); break;
             }
         }

@@ -16,6 +16,10 @@ public class LinuxCommands : MonoBehaviour
     private int step = 0;
     private int stagesubmit = 0;
     private QA[] qAs=new QA[10];
+    private int QuestionAnger = 0;
+    public Animator guitou;
+    private int QuestionSameState = 0;
+    private int QuestionLastState = 1;
     public void Execute(string inst)
     {
         if (inst.Substring(inst.Length-1,1)=="\n" || inst.Substring(inst.Length-1,1)==" ")
@@ -83,8 +87,14 @@ public class LinuxCommands : MonoBehaviour
                 case "cheat":
                     instcheat(inst);
                     break;
+                case "?":
+                    instques(inst);
+                    break;
+                case "summon":
+                    instsummon(inst);
+                    break;
                 default:
-                    GameManager.AddInstruction("Command not found");
+                    GameManager.AddInstruction("***Command not found***");
                     break;
             }
             step = 0;
@@ -129,6 +139,193 @@ public class LinuxCommands : MonoBehaviour
         }
     }
 
+    private void instques(string inst)
+    {
+        QuestionAnger++;
+        if (QuestionLastState == StateMachine.State)
+        {
+            QuestionSameState++;
+        }
+        else
+        {
+            QuestionSameState = 1;
+            QuestionLastState = StateMachine.State;
+        }
+        switch (StateMachine.State)
+        {
+            case 1:
+                switch(QuestionSameState)
+                {
+                    case 1:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("You want to submit your work. Therefore, navigate yourself into the submission folder,");
+                        GameManager.AddInstruction("And enter 'cs400 submit' there.");
+                        GameManager.AddInstruction("You can also use 'cat instruction.txt' in the root repository for more information.");
+                        break;
+                    case 2:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("Navigate into P214.Integration using 'cd' command and see what's going on!");
+                        break;
+                    default:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("First, go to the root folder using 'cd'.");
+                        GameManager.AddInstruction("Next, enter 'cd P214.Integration'");
+                        GameManager.AddInstruction("Finally, enter 'cs400 submit'.");
+                        break;
+                }
+                break;
+            case 2:
+                switch (QuestionSameState)
+                {
+                    case 1:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("Find the right folder inside Berman_Only_Folder.");
+                        GameManager.AddInstruction("Use'mv' to move 1017.txt there.");
+                        GameManager.AddInstruction("You can also use 'cat instruction.txt' in the root repository for more information.");
+                        GameManager.AddInstruction("If you find using 'mv' too difficult, here is another choice:");
+                        GameManager.AddInstruction("enter 'summon 1017.txt' in the folder it supposed to be move to.");
+                        break;
+                    case 2:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("If you find using 'mv' too difficult, here is another choice:");
+                        GameManager.AddInstruction("enter 'summon 1017.txt' in the folder it supposed to be move to.");
+                        GameManager.AddInstruction("Use 'cd' to explore the folders.");
+                        break;
+                    case 3:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("First, go to the root folder using 'cd'.");
+                        GameManager.AddInstruction("Next, find the right folder inside Berman_Only_Folder using 'cd Berman_Only_Folder' and then 'ls'");
+                        GameManager.AddInstruction("Finally, dive into the right folder and use 'summon 1017.txt'.");
+                        break;
+                    default:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("First, go to the root folder using 'cd'.");
+                        GameManager.AddInstruction("Next, find the right folder inside Berman_Only_Folder using 'cd Berman_Only_Folder' and then 'ls'");
+                        GameManager.AddInstruction("Finally, dive into the folder 'October' and use 'summon 1017.txt'.");
+                        break;
+                }
+                break;
+            case 3:
+                switch (QuestionSameState)
+                {
+                    case int n when (n>=1 && n<=4):
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("Decrypt the files in Project_Samantha using 'make'.");
+                        GameManager.AddInstruction("Use 'cat {file name}' to read these letters.");
+                        GameManager.AddInstruction("After that, go back to the root folder.");
+                        GameManager.AddInstruction("Reminder: Unless you use 5 times of '?' command for this, you will not receive any further instruction.");
+                        break;
+               
+                    default:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("First, go to the root folder using 'cd'.");
+                        GameManager.AddInstruction("Next, use 'cd Project_Samantha' and then 'ls' to enter the folder, you will find a Makefile there");
+                        GameManager.AddInstruction("Next, enter 'make'.");
+                        GameManager.AddInstruction("Use 'ls' to display all the letters. After finish reading them, use 'cd' to go back to root folder.");
+                        break;
+                }
+                break;
+            case 4:
+                switch (QuestionSameState)
+                {
+                    case int n when (n >= 1 && n <= 2):
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("Dive into folder 'Professor_Emails', and find your NetID.");
+                        GameManager.AddInstruction("Use 'cat {file name}' to read these Emails. It contains important clues.");
+                        GameManager.AddInstruction("Try to find your NetID there in the deepest end of the folder.");
+                        break;
+                    default:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("Dive into folder 'Professor_Emails', and find your NetID.");
+                        GameManager.AddInstruction("Use 'cat {file name}' to read these Emails. It contains important clues.");
+                        GameManager.AddInstruction("Try to find your NetID there in the deepest end of the folder.");
+                        GameManager.AddInstruction("Here is a loop: you use 'ls' to find what's inside this folder, use 'cd'  to enter its subfolder,\n" +
+                            "and then continue the loop until finding your NetID.");
+                        break;
+                }
+                break;
+            case 5:
+                switch (QuestionSameState)
+                {
+                    case 1:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("You want to submit your work. Therefore, navigate yourself into the submission folder,");
+                        GameManager.AddInstruction("And enter 'cs400 submit' there.");
+                        GameManager.AddInstruction("You can also use 'cat instruction.txt' in the root repository for more information.");
+                        break;
+                    case 2:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("Navigate into P214.Integration using 'cd' command and see what's going on!");
+                        break;
+                    default:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("First, go to the root folder using 'cd'.");
+                        GameManager.AddInstruction("Next, enter 'cd P214.Integration'");
+                        GameManager.AddInstruction("Finally, enter 'cs400 submit'.");
+                        break;
+                }
+                break;
+            case 6:
+                GameManager.AddInstruction("Enter 'sudo apt install Samantha' to continue.");
+                break;
+            case 7:
+                GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                GameManager.AddInstruction("Use 'Samantha -q' to start the Q&A part!");
+                GameManager.AddInstruction("Make sure you have carefully read the love letters in folder 'Project_Samantha'.");
+                GameManager.AddInstruction("Also, make sure that you have read 1017.txt you moved.");
+                GameManager.AddInstruction("Many people die here. Good luck!");
+                break;
+            case 8:
+                switch (QuestionSameState)
+                {
+                    case 1:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("You want to submit your work. Therefore, navigate yourself into the submission folder,");
+                        GameManager.AddInstruction("And enter 'cs400 submit' there.");
+                        GameManager.AddInstruction("You can also use 'cat instruction.txt' in the root repository for more information.");
+                        break;
+                    case 2:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("Navigate into P214.Integration using 'cd' command and see what's going on!");
+                        break;
+                    default:
+                        GameManager.AddInstruction("<b>Always enter 'ls' when you don't know what to do!</b>");
+                        GameManager.AddInstruction("First, go to the root folder using 'cd'.");
+                        GameManager.AddInstruction("Next, enter 'cd P214.Integration'");
+                        GameManager.AddInstruction("Finally, enter 'cs400 submit'.");
+                        break;
+                }
+                break;
+            case 9:
+                if (QuestionSameState == 1)
+                    GameManager.AddInstruction("CHECK SAMANTHA");
+                else if (QuestionSameState==2) GameManager.AddInstruction("CHECK INSTRUCTION SAMANTHA");
+                else
+                {
+                    GameManager.AddInstruction("CHECK INSTRUCTION SAMANTHA");
+                    GameManager.AddInstruction("Don't know NetID? Check folder Professor_Email again!");
+                }
+                break;
+        }
+        //Add Anger expression if necessary
+        if (QuestionAnger==10)
+        {
+            QuestionAnger = 0;
+            guitou.SetTrigger("Angry");
+            GameManager.AddInstruction("<b><color=#635B3D>All infomation you found using '?' are fake.</color></b>",1.5f);
+            GameManager.AddInstruction("<b><color=#635B3D>STOP THAT.</color></b>", 1.5f);
+            GameManager.SmsAnger++;
+            GameManager.QuesLose = true;
+        }
+    }
+
+    private void instsummon(string inst)
+    {
+        if (GameManager.TidyString(inst)=="1017.txt" && GameManager.currFolder.name=="October" && StateMachine.State==2)
+        {
+            StateMachine.NextState = true;
+        }
+    }
     private void instcd(string inst)
     {
         inst = Regex.Replace(inst, "\n", "").Trim();
@@ -148,7 +345,9 @@ public class LinuxCommands : MonoBehaviour
 
     private void instcheat(string inst)
     {
-        StateMachine.NextState = true;
+        if (GameManager.TidyString(inst) == "teacup")
+            StateMachine.NextState = true;
+        else GameManager.AddInstruction("<b><color=#B71013>Don't even try to CHEAT.</color></b>");
     }
 
     private void instls(string inst)
@@ -169,8 +368,9 @@ public class LinuxCommands : MonoBehaviour
     
     private void instchmod(string inst)
     {
-        GameManager.AddInstruction("Oh, funny! You want to control the system fully?", 1);
-        //Cases of anger
+        GameManager.AddInstruction("Oh, funny! You wanna control the system fully?", 1);
+        GameManager.SmsAnger++;
+        GameManager.QuesLose = true;
         GameManager.AddInstruction("I'm sorry.", 1);
         GameManager.AddInstruction("I cannot give you this chance.", 0.5f);
     }
@@ -313,7 +513,7 @@ public class LinuxCommands : MonoBehaviour
                         GameManager.AddInstruction("No, you are wrong...", 2);
                         GameManager.AddInstruction("Is it so difficult to read through all my love letters?", 2);
                         GameManager.AddInstruction("Think about it.", 1);
-                        GameManager.AddInstruction("<b><color=#B71013>I'm very angry.</color><b>");
+                        GameManager.AddInstruction("<b><color=#B71013>I'm very angry.</color></b>");
                         GameManager.SmsAnger++;
                         GameManager.AddAnger = true;
                     }
@@ -330,8 +530,9 @@ public class LinuxCommands : MonoBehaviour
                         GameManager.AddInstruction("No, you are wrong...", 2);
                         GameManager.AddInstruction("Is it so difficult to read through all my love letters?", 2);
                         GameManager.AddInstruction("Think about it.", 1);
-                        GameManager.AddInstruction("<b><color=#B71013>I'm very angry.</color><b>");
+                        GameManager.AddInstruction("<b><color=#B71013>I'm very angry.</color></b>");
                         GameManager.SmsAnger++;
+                        GameManager.QuesLose = false;
                     }
                     else
                     {
