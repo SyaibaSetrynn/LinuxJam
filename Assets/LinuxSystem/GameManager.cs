@@ -121,6 +121,7 @@ public class GameManager : MonoBehaviour
         AddInstruction("Use instruction 'cd' to change directory.");
         AddInstruction("Use 'cat instruction.txt' to see more details.");
         AddInstruction("Developer note: if you get stuck, feel free to enter a single '?' for assistance!");
+        AddInstruction("Enter 'quit' to leave the game.");
         LockInstruction[0] = false;
         NumberOf1017 = 1;
         //CHEATCODE

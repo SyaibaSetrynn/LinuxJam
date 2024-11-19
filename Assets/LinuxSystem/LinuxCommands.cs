@@ -93,6 +93,9 @@ public class LinuxCommands : MonoBehaviour
                 case "summon":
                     instsummon(inst);
                     break;
+                case "quit":
+                    Application.Quit(0);
+                    break;
                 default:
                     GameManager.AddInstruction("***Command not found***");
                     break;
