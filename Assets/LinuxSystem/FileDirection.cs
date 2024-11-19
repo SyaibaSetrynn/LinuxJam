@@ -200,7 +200,7 @@ public class FileDirection : MonoBehaviour
         root.AddFile("instruction.txt", "This is the instruction");
         Debug.Log(root.files[0].name);
         //Construct Folders
-        root.AddSubFolder(new Folder("P214.Integration"));
+        root.AddSubFolder(new Folder("SubmissionFolder"));
         root.subFolders[0].AddFile("submission.java",
                                                     "*****Premission Error*****\n" +
                                                     "You don't have permission to open this file.\n" +

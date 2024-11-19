@@ -117,6 +117,7 @@ public class LinuxCommands : MonoBehaviour
                     if (GameManager.NetIDReqCount>= 100)
                     {
                         GameManager.NetIDReq = false;
+                        GameManager.NetIDReqCount = 0;
                         for (int i = 0; i < 10; i++)
                             GameManager.AddInstruction("<b>SHUT UP</b>");
                         GameManager.AddInstruction("It's no use.", 2f);
@@ -756,7 +757,7 @@ public class LinuxCommands : MonoBehaviour
     private void cs400submit(string inst,int step)
     {
         Debug.Log(inst);
-        if (inst.Trim().Replace("\n", "").Replace("\r", "") == "Berman938")
+        if (inst.Trim().Replace("\n", "").Replace("\r", "") == "Berman938" || inst.Trim().Replace("\n", "").Replace("\r", "")=="Mycs400")
         {
             if (StateMachine.State<4)
             {
@@ -776,7 +777,7 @@ public class LinuxCommands : MonoBehaviour
                 GameManager.LockInstruction[3] = false;
                 StateMachine.NextState = true;
             }
-            else if (StateMachine.State<9)
+            else if (StateMachine.State<9 && !(inst.Trim().Replace("\n", "").Replace("\r", "") == "Mycs400"))
             {
                 GameManager.AddInstruction("Submission processing.......", 3f);
                 GameManager.AddInstruction("Success! Use 'cs400 check' for more information.");

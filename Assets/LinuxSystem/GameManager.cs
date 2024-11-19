@@ -122,6 +122,8 @@ public class GameManager : MonoBehaviour
         AddInstruction("Use 'cat instruction.txt' to see more details.");
         AddInstruction("Developer note: if you get stuck, feel free to enter a single '?' for assistance!");
         AddInstruction("Enter 'quit' to leave the game.");
+        AddInstruction("What about playing a Q&A game?");
+        AddInstruction("Use 'sudo apt install Samantha' to install the module.");
         LockInstruction[0] = false;
         NumberOf1017 = 1;
         //CHEATCODE
