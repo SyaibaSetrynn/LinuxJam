@@ -572,7 +572,7 @@ public class LinuxCommands : MonoBehaviour
         string[] args = inst.Split(' ');
         if (args.Length < 2)
         {
-            GameManager.AddInstruction("Usage: mv (source) (destination)");
+            GameManager.AddInstruction("Usage: mv (source) (destination/newFileName)");
             return;
         }
 
