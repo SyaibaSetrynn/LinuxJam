@@ -231,7 +231,7 @@ public class GameManager : MonoBehaviour
                     AddInstruction("So your NetID is Mycs400");
                     AddInstruction("Submit your work if you want.",1f);
                     AddInstruction("I don't care.",5f);
-                    AddInstruction("Yeah, I don't care.");
+                    AddInstruction("Yeah, I don't care. [Press enter]");
                     StateMachine.NextState = true;
                 }
             }
@@ -253,6 +253,9 @@ public class GameManager : MonoBehaviour
         }
         if (EndGame)
         {
+            Debug.Log("Game Ended.");
+            mask.SetTrigger("FinalState");
+            guitou.SetTrigger("GameEnd");
             if (CoolDownBeforeEnd>0)
             {
                 CoolDownBeforeEnd -= Time.deltaTime;
@@ -263,8 +266,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                mask.SetTrigger("FinalState");
-                guitou.SetTrigger("GameEnd");
                 EndGame = false;
             }
         }

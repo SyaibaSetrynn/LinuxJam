@@ -590,6 +590,11 @@ public class LinuxCommands : MonoBehaviour
 
         // Find the destination folder (should be an existing folder path)
         string[] destinationPathParts = destinationPath.Split('/');
+        if (destinationPathParts.Length < 2)
+        {
+            GameManager.AddInstruction("File expected.");
+            return;
+        }
         string destinationFolderPath = string.Join("/", destinationPathParts, 0, destinationPathParts.Length - 1);
         Folder destinationFolder = FindFolder(GameManager.currFolder, destinationFolderPath);
 
@@ -726,7 +731,7 @@ public class LinuxCommands : MonoBehaviour
             GameManager.AddInstruction("Command locked by administrator.");
             return;
         }
-        if (GameManager.currFolder.name!="P214.Integration")
+        if (GameManager.currFolder.name!="SubmissionFolder")
         {
             GameManager.AddInstruction("Please enter the submission folder to run this command.");
             return;
@@ -742,8 +747,14 @@ public class LinuxCommands : MonoBehaviour
                 cs400check(inst);
                 GameManager.inprogram = false;
                 break;
-            case "init": break;
-                //This is a cheat code, allowing player to go to the final state
+            case "init": 
+                StateMachine.State = 9;
+                GameManager.LockInstruction[0] = false;
+                GameManager.LockInstruction[1] = false;
+                GameManager.LockInstruction[2] = false;
+                GameManager.LockInstruction[3] = false;
+                GameManager.LockInstruction[4] = false;
+                break;
             default:
                 GameManager.AddInstruction("Invalid parameter for command 'cs400'.");
                 GameManager.AddInstruction("Try again.");
@@ -773,7 +784,6 @@ public class LinuxCommands : MonoBehaviour
                 GameManager.AddInstruction("No?",1);
                 GameManager.AddInstruction("You don't have a choice.", 2);
                 GameManager.AddInstruction("All you need to do is to <b><color=#B71013>stay with me.</color></b>", 1);
-                StateMachine.State++;
                 GameManager.LockInstruction[3] = false;
                 StateMachine.NextState = true;
             }
@@ -786,8 +796,19 @@ public class LinuxCommands : MonoBehaviour
             }
             else
             {
+                if ((inst.Trim().Replace("\n", "").Replace("\r", "") == "Mycs400"))
+                {
+                    GameManager.AddInstruction("Submission processing.......", 3f);
+                    GameManager.AddInstruction("Failed... Try to reconnect...", 3f);
+                    GameManager.AddInstruction("Failed... Try to reconnect...", 3f);
+                    GameManager.AddInstruction("NetID not found......", 2f);
+                    GameManager.AddInstruction("Check folder Professor_Emails.");
+                }
                 GameManager.AddInstruction("Submission processing.......", 3f);
                 GameManager.AddInstruction("Failed... Try to reconnect...",3f);
+                GameManager.AddInstruction("Failed... Try to reconnect...", 3f);
+                GameManager.AddInstruction("Failed... Try to reconnect...", 3f);
+                GameManager.AddInstruction("Failed... Try to reconnect...", 3f);
                 stagesubmit = 11;
             }
         }
