@@ -121,9 +121,9 @@ public class GameManager : MonoBehaviour
         AddInstruction("Use instruction 'cd' to change directory.");
         AddInstruction("Use 'cat instruction.txt' to see more details.");
         AddInstruction("Developer note: if you get stuck, feel free to enter a single '?' for assistance!");
-        AddInstruction("Enter 'quit' to leave the game.");
-        AddInstruction("What about playing a Q&A game?");
-        AddInstruction("Use 'sudo apt install Samantha' to install the module.");
+        AddInstruction("Developer note: Enter 'quit' to leave the game.");
+        AddInstruction("Developer note: You need to submit your cs400 homework on your virtual machine.");
+        AddInstruction("Developer note: Find the submission folder and enter 'cs400 submit'");
         LockInstruction[0] = false;
         NumberOf1017 = 1;
         //CHEATCODE
